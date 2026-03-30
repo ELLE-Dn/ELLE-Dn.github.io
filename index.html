@@ -1,15 +1,737 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-  <title>Threat Intel Feed</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELLE-Dn Threat Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#0d1726;
+      --panel-2:#101c2e;
+      --border:#22324a;
+      --text:#e7edf7;
+      --muted:#9fb0c7;
+      --accent:#5eead4;
+      --accent-2:#60a5fa;
+      --shadow:0 10px 30px rgba(0,0,0,.28);
+      --radius:18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(94,234,212,.08), transparent 24%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero-card, .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 24px;
+    }
+
+    .title {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .hero-side {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .path {
+      color: var(--accent);
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat .sub {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 19px;
+    }
+
+    .chart-box {
+      height: 320px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      outline: none;
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      color: #07111f;
+      font-weight: 800;
+      border: none;
+    }
+
+    button:hover { filter: brightness(1.05); }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      max-height: 380px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.015);
+    }
+
+    .list-item .name {
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .list-item .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+      word-break: break-word;
+    }
+
+    .count {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 760px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1250px;
+      background: var(--panel);
+    }
+
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #0f1b2d;
+      z-index: 2;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #b9c7da;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,.02);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      font-size: 11px;
+      color: var(--muted);
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .risk-high {
+      color: #fecaca;
+      background: rgba(248,113,113,.12);
+      border-color: rgba(248,113,113,.3);
+    }
+
+    .risk-med {
+      color: #fde68a;
+      background: rgba(251,191,36,.10);
+      border-color: rgba(251,191,36,.28);
+    }
+
+    .risk-low {
+      color: #bbf7d0;
+      background: rgba(52,211,153,.10);
+      border-color: rgba(52,211,153,.25);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1200px) {
+      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2, .hero { grid-template-columns: 1fr; }
+      .filters { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .stats { grid-template-columns: 1fr; }
+      .filters { grid-template-columns: 1fr; }
+      .title { font-size: 28px; }
+    }
+  </style>
 </head>
-<body style="background:#0f172a;color:white;font-family:sans-serif">
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <h1 class="title">ELLE-Dn Honeypot Dashboard</h1>
+        <p class="subtitle">
+          Dashboard pubblica che legge direttamente <code>eve_inbound.json</code> e mostra aggregazioni per country,
+          IP, signature, URL e user-agent, più la lista completa dei log del giorno.
+        </p>
+      </div>
+      <div class="hero-card hero-side">
+        <div class="mini">Sorgente dati</div>
+        <div class="path">./eve_inbound.json</div>
+        <div class="mini">Ultimo refresh</div>
+        <div id="lastRefresh" class="path">-</div>
+      </div>
+    </section>
 
-<h1>🛡️ Threat Intelligence Feed</h1>
+    <section class="stats">
+      <div class="stat">
+        <div class="label">Eventi totali</div>
+        <div class="value" id="totalEvents">0</div>
+        <div class="sub">log del giorno</div>
+      </div>
+      <div class="stat">
+        <div class="label">IP unici</div>
+        <div class="value" id="uniqueIps">0</div>
+        <div class="sub">sorgenti osservate</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top country</div>
+        <div class="value" id="topCountry">-</div>
+        <div class="sub">paese più frequente</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top signature</div>
+        <div class="value" id="topSignature">-</div>
+        <div class="sub">firma più ricorrente</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top porta</div>
+        <div class="value" id="topPort">-</div>
+        <div class="sub">porta più bersagliata</div>
+      </div>
+    </section>
 
-<p>Progetto honeypot</p>
+    <section class="grid-2">
+      <div class="panel">
+        <h2>Eventi per ora</h2>
+        <div class="chart-box"><canvas id="hourlyChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Top countries</h2>
+        <div class="chart-box"><canvas id="countryChart"></canvas></div>
+      </div>
+    </section>
 
-<p>Status: online ✅</p>
+    <section class="grid-2">
+      <div class="panel">
+        <h2>Top signatures</h2>
+        <div class="chart-box"><canvas id="signatureChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Top URL</h2>
+        <div class="chart-box"><canvas id="urlChart"></canvas></div>
+      </div>
+    </section>
 
+    <section class="grid-2">
+      <div class="panel">
+        <h2>Top user-agent</h2>
+        <div class="chart-box"><canvas id="uaChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Top IP</h2>
+        <div class="chart-box"><canvas id="ipChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-3">
+      <div class="panel">
+        <h2>Raggruppamento per country</h2>
+        <div class="list" id="countryList"></div>
+      </div>
+      <div class="panel">
+        <h2>Raggruppamento per signature</h2>
+        <div class="list" id="signatureList"></div>
+      </div>
+      <div class="panel">
+        <h2>Raggruppamento per IP</h2>
+        <div class="list" id="ipList"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Lista completa dei log del giorno</h2>
+      <div class="filters">
+        <input id="filterIp" placeholder="Filtra IP sorgente">
+        <input id="filterCountry" placeholder="Filtra country">
+        <input id="filterSignature" placeholder="Filtra signature">
+        <input id="filterUrl" placeholder="Filtra URL">
+        <input id="filterUa" placeholder="Filtra user-agent">
+        <input id="filterPort" placeholder="Filtra porta">
+      </div>
+      <div class="filters" style="grid-template-columns: 1fr 1fr 1fr;">
+        <select id="filterProto">
+          <option value="">Tutti i protocolli</option>
+        </select>
+        <select id="filterRisk">
+          <option value="">Tutti i livelli di rischio</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+          <option value="unknown">Unknown</option>
+        </select>
+        <button id="resetFilters">Reset filtri</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>IP sorgente</th>
+              <th>Country</th>
+              <th>Porta</th>
+              <th>Proto</th>
+              <th>URL</th>
+              <th>Signature</th>
+              <th>User-Agent</th>
+              <th>Score</th>
+              <th>Reports</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="footer-note">
+        La tabella mostra tutti i log del giorno presenti in <code>eve_inbound.json</code>.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const DATA_FILE = "./eve_inbound.json";
+    const charts = [];
+    let allEvents = [];
+    let filteredEvents = [];
+
+    function nowLabel() {
+      return new Date().toLocaleString("it-IT", { hour12: false });
+    }
+
+    function parseJsonLines(text) {
+      return text
+        .split("\n")
+        .map(x => x.trim())
+        .filter(Boolean)
+        .map(line => {
+          try { return JSON.parse(line); }
+          catch { return null; }
+        })
+        .filter(Boolean);
+    }
+
+    function countBy(arr, fn) {
+      const m = new Map();
+      for (const item of arr) {
+        const key = fn(item);
+        if (key === undefined || key === null || key === "") continue;
+        m.set(key, (m.get(key) || 0) + 1);
+      }
+      return [...m.entries()].sort((a,b) => b[1] - a[1]);
+    }
+
+    function topN(arr, n=10) {
+      return arr.slice(0, n);
+    }
+
+    function riskLabel(score) {
+      if (score === undefined || score === null) return "unknown";
+      if (score >= 80) return "high";
+      if (score >= 30) return "medium";
+      return "low";
+    }
+
+    function riskClass(score) {
+      const r = riskLabel(score);
+      if (r === "high") return "risk-high";
+      if (r === "medium") return "risk-med";
+      if (r === "low") return "risk-low";
+      return "";
+    }
+
+    function setSummary(events) {
+      const total = events.length;
+      const uniqueIps = new Set(events.map(e => e.src_ip).filter(Boolean)).size;
+      const topCountry = countBy(events, e => e.country)[0]?.[0] || "-";
+      const topSignature = countBy(events, e => e.signature)[0]?.[0] || "-";
+      const topPort = countBy(events, e => String(e.dest_port ?? ""))[0]?.[0] || "-";
+
+      document.getElementById("totalEvents").textContent = total;
+      document.getElementById("uniqueIps").textContent = uniqueIps;
+      document.getElementById("topCountry").textContent = topCountry;
+      document.getElementById("topSignature").textContent = topSignature.length > 26 ? topSignature.slice(0,26) + "…" : topSignature;
+      document.getElementById("topPort").textContent = topPort;
+      document.getElementById("lastRefresh").textContent = nowLabel();
+    }
+
+    function destroyCharts() {
+      while (charts.length) charts.pop().destroy();
+    }
+
+    function makeChart(id, type, labels, values, label) {
+      const c = new Chart(document.getElementById(id), {
+        type,
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data: values
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: "#e7edf7" }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: "#c8d5e7" },
+              grid: { color: "rgba(255,255,255,.06)" }
+            },
+            y: {
+              ticks: { color: "#c8d5e7" },
+              grid: { color: "rgba(255,255,255,.06)" }
+            }
+          }
+        }
+      });
+      charts.push(c);
+    }
+
+    function renderCharts(events) {
+      destroyCharts();
+
+      const countries = topN(countBy(events, e => e.country), 10);
+      const signatures = topN(countBy(events, e => e.signature), 10);
+      const urls = topN(countBy(events, e => e.url), 10);
+      const uas = topN(countBy(events, e => e.user_agent), 10);
+      const ips = topN(countBy(events, e => e.src_ip), 10);
+
+      const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, "0"), 0]);
+      const hourMap = new Map(hourly);
+      for (const e of events) {
+        if (!e.timestamp) continue;
+        const h = e.timestamp.slice(11, 13);
+        if (hourMap.has(h)) hourMap.set(h, hourMap.get(h) + 1);
+      }
+
+      makeChart("hourlyChart", "line", [...hourMap.keys()], [...hourMap.values()], "Eventi");
+      makeChart("countryChart", "bar", countries.map(x => x[0]), countries.map(x => x[1]), "Eventi");
+      makeChart("signatureChart", "bar", signatures.map(x => x[0]), signatures.map(x => x[1]), "Eventi");
+      makeChart("urlChart", "bar", urls.map(x => x[0]), urls.map(x => x[1]), "Eventi");
+      makeChart("uaChart", "bar", uas.map(x => x[0]), uas.map(x => x[1]), "Eventi");
+      makeChart("ipChart", "bar", ips.map(x => x[0]), ips.map(x => x[1]), "Eventi");
+    }
+
+    function renderGroupedList(containerId, items, formatter) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = "";
+      if (!items.length) {
+        el.innerHTML = `<div class="muted">Nessun dato disponibile</div>`;
+        return;
+      }
+
+      for (const [name, count] of items) {
+        const row = document.createElement("div");
+        row.className = "list-item";
+        row.innerHTML = formatter(name, count);
+        el.appendChild(row);
+      }
+    }
+
+    function renderGroupings(events) {
+      const countries = topN(countBy(events, e => e.country), 20);
+      const signatures = topN(countBy(events, e => e.signature), 20);
+      const ips = topN(countBy(events, e => e.src_ip), 20);
+
+      renderGroupedList("countryList", countries, (name, count) => `
+        <div>
+          <div class="name">${escapeHtml(name)}</div>
+          <div class="meta">Eventi osservati dal paese</div>
+        </div>
+        <div class="count">${count}</div>
+      `);
+
+      renderGroupedList("signatureList", signatures, (name, count) => `
+        <div>
+          <div class="name">${escapeHtml(name)}</div>
+          <div class="meta">Signature osservata nel log</div>
+        </div>
+        <div class="count">${count}</div>
+      `);
+
+      renderGroupedList("ipList", ips, (name, count) => `
+        <div>
+          <div class="name">${escapeHtml(name)}</div>
+          <div class="meta">Sorgente osservata nel dataset</div>
+        </div>
+        <div class="count">${count}</div>
+      `);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function renderTable(events) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      for (const e of events) {
+        const tr = document.createElement("tr");
+        const risk = riskLabel(e.score);
+        tr.innerHTML = `
+          <td>${escapeHtml(e.timestamp || "")}</td>
+          <td>${escapeHtml(e.src_ip || "")}</td>
+          <td>
+            ${escapeHtml(e.country || "")}
+            ${e.country_code ? `<span class="tag">${escapeHtml(e.country_code)}</span>` : ""}
+          </td>
+          <td>${escapeHtml(e.dest_port ?? "")}</td>
+          <td>${escapeHtml(e.app_proto || "")}</td>
+          <td>${escapeHtml(e.url || "")}</td>
+          <td>${escapeHtml(e.signature || "")}</td>
+          <td>${escapeHtml(e.user_agent || "")}</td>
+          <td>${escapeHtml(e.score ?? "")}</td>
+          <td>${escapeHtml(e.reports ?? "")}</td>
+          <td><span class="tag ${riskClass(e.score)}">${risk}</span></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function fillProtoFilter(events) {
+      const select = document.getElementById("filterProto");
+      const values = [...new Set(events.map(e => e.app_proto).filter(Boolean))].sort();
+      select.innerHTML = `<option value="">Tutti i protocolli</option>`;
+      for (const v of values) {
+        const o = document.createElement("option");
+        o.value = v;
+        o.textContent = v;
+        select.appendChild(o);
+      }
+    }
+
+    function applyFilters() {
+      const ip = document.getElementById("filterIp").value.trim().toLowerCase();
+      const country = document.getElementById("filterCountry").value.trim().toLowerCase();
+      const signature = document.getElementById("filterSignature").value.trim().toLowerCase();
+      const url = document.getElementById("filterUrl").value.trim().toLowerCase();
+      const ua = document.getElementById("filterUa").value.trim().toLowerCase();
+      const port = document.getElementById("filterPort").value.trim().toLowerCase();
+      const proto = document.getElementById("filterProto").value.trim().toLowerCase();
+      const risk = document.getElementById("filterRisk").value.trim().toLowerCase();
+
+      filteredEvents = allEvents.filter(e => {
+        if (ip && !String(e.src_ip || "").toLowerCase().includes(ip)) return false;
+        if (country && !String(e.country || "").toLowerCase().includes(country)) return false;
+        if (signature && !String(e.signature || "").toLowerCase().includes(signature)) return false;
+        if (url && !String(e.url || "").toLowerCase().includes(url)) return false;
+        if (ua && !String(e.user_agent || "").toLowerCase().includes(ua)) return false;
+        if (port && !String(e.dest_port || "").toLowerCase().includes(port)) return false;
+        if (proto && String(e.app_proto || "").toLowerCase() !== proto) return false;
+        if (risk && riskLabel(e.score) !== risk) return false;
+        return true;
+      });
+
+      renderTable(filteredEvents);
+    }
+
+    function initFilters() {
+      const ids = [
+        "filterIp", "filterCountry", "filterSignature",
+        "filterUrl", "filterUa", "filterPort", "filterProto", "filterRisk"
+      ];
+      ids.forEach(id => document.getElementById(id).addEventListener("input", applyFilters));
+      ids.forEach(id => document.getElementById(id).addEventListener("change", applyFilters));
+
+      document.getElementById("resetFilters").addEventListener("click", () => {
+        ids.forEach(id => document.getElementById(id).value = "");
+        filteredEvents = [...allEvents];
+        renderTable(filteredEvents);
+      });
+    }
+
+    async function loadData() {
+      const response = await fetch(`${DATA_FILE}?ts=${Date.now()}`, { cache: "no-store" });
+      const text = await response.text();
+      const events = parseJsonLines(text).sort((a, b) =>
+        String(b.timestamp || "").localeCompare(String(a.timestamp || ""))
+      );
+
+      allEvents = events;
+      filteredEvents = [...events];
+
+      setSummary(allEvents);
+      fillProtoFilter(allEvents);
+      renderCharts(allEvents);
+      renderGroupings(allEvents);
+      renderTable(allEvents);
+    }
+
+    initFilters();
+    loadData().catch(err => {
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `<div style="padding:20px;color:#fecaca">Errore caricamento dati: ${escapeHtml(err.message || err)}</div>`
+      );
+      console.error(err);
+    });
+  </script>
 </body>
 </html>
