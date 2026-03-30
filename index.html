@@ -310,43 +310,42 @@
       <div class="hero-card">
         <h1 class="title">ELLE-Dn Honeypot Dashboard</h1>
         <p class="subtitle">
-          Dashboard pubblica che legge direttamente <code>eve_inbound.json</code> e mostra aggregazioni per country,
-          IP, signature, URL e user-agent, più la lista completa dei log del giorno.
+          Dashboard from our honeypot data.
         </p>
       </div>
       <div class="hero-card hero-side">
-        <div class="mini">Sorgente dati</div>
-        <div class="path">./eve_inbound.json</div>
-        <div class="mini">Ultimo refresh</div>
+        <div class="mini">Data source dati</div>
+        <div class="path">.honeypot</div>
+        <div class="mini">Last refresh</div>
         <div id="lastRefresh" class="path">-</div>
       </div>
     </section>
 
     <section class="stats">
       <div class="stat">
-        <div class="label">Eventi totali</div>
+        <div class="label">Total events</div>
         <div class="value" id="totalEvents">0</div>
-        <div class="sub">log del giorno</div>
+        <div class="sub">logs of the day</div>
       </div>
       <div class="stat">
-        <div class="label">IP unici</div>
+        <div class="label">Unique IPs</div>
         <div class="value" id="uniqueIps">0</div>
-        <div class="sub">sorgenti osservate</div>
+        <div class="sub">observed sources</div>
       </div>
       <div class="stat">
         <div class="label">Top country</div>
         <div class="value" id="topCountry">-</div>
-        <div class="sub">paese più frequente</div>
+        <div class="sub">Top country</div>
       </div>
       <div class="stat">
         <div class="label">Top signature</div>
         <div class="value" id="topSignature">-</div>
-        <div class="sub">firma più ricorrente</div>
+        <div class="sub">Top signature</div>
       </div>
       <div class="stat">
-        <div class="label">Top porta</div>
+        <div class="label">Top dest port</div>
         <div class="value" id="topPort">-</div>
-        <div class="sub">porta più bersagliata</div>
+        <div class="sub">Top dest port</div>
       </div>
     </section>
 
@@ -385,35 +384,35 @@
 
     <section class="grid-3">
       <div class="panel">
-        <h2>Raggruppamento per country</h2>
+        <h2>Country</h2>
         <div class="list" id="countryList"></div>
       </div>
       <div class="panel">
-        <h2>Raggruppamento per signature</h2>
+        <h2>Signature</h2>
         <div class="list" id="signatureList"></div>
       </div>
       <div class="panel">
-        <h2>Raggruppamento per IP</h2>
+        <h2>Source IP</h2>
         <div class="list" id="ipList"></div>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Lista completa dei log del giorno</h2>
+      <h2>Log of the day</h2>
       <div class="filters">
-        <input id="filterIp" placeholder="Filtra IP sorgente">
-        <input id="filterCountry" placeholder="Filtra country">
-        <input id="filterSignature" placeholder="Filtra signature">
-        <input id="filterUrl" placeholder="Filtra URL">
-        <input id="filterUa" placeholder="Filtra user-agent">
-        <input id="filterPort" placeholder="Filtra porta">
+        <input id="filterIp" placeholder="Filter Source IP">
+        <input id="filterCountry" placeholder="Filter Country">
+        <input id="filterSignature" placeholder="Filter Signature">
+        <input id="filterUrl" placeholder="Filter URL">
+        <input id="filterUa" placeholder="Filter user-agent">
+        <input id="filterPort" placeholder="Filter dest port">
       </div>
       <div class="filters" style="grid-template-columns: 1fr 1fr 1fr;">
         <select id="filterProto">
-          <option value="">Tutti i protocolli</option>
+          <option value="">All protocols</option>
         </select>
         <select id="filterRisk">
-          <option value="">Tutti i livelli di rischio</option>
+          <option value="">All risks</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
           <option value="low">Low</option>
@@ -443,7 +442,7 @@
         </table>
       </div>
       <div class="footer-note">
-        La tabella mostra tutti i log del giorno presenti in <code>eve_inbound.json</code>.
+        Logs of the day are shown.
       </div>
     </section>
   </div>
