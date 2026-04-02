@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ELLE-Dn Threat Dashboard</title>
+  <title>ELLE-Dn Unified Honeypot Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root{
@@ -15,12 +15,19 @@
       --muted:#9fb0c7;
       --accent:#5eead4;
       --accent-2:#60a5fa;
+      --danger:#f87171;
+      --warn:#fbbf24;
+      --ok:#34d399;
       --shadow:0 10px 30px rgba(0,0,0,.28);
       --radius:18px;
+      --mail-bg:#f8fafc;
+      --mail-text:#0f172a;
+      --mail-muted:#64748b;
+      --mail-border:#dbe4ee;
     }
 
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
@@ -32,7 +39,7 @@
     }
 
     .wrap {
-      max-width: 1500px;
+      max-width: 1600px;
       margin: 0 auto;
       padding: 28px 20px 40px;
     }
@@ -51,23 +58,7 @@
       box-shadow: var(--shadow);
     }
 
-    .hero-card {
-      padding: 24px;
-    }
-
-    .title {
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      margin: 0 0 8px;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.5;
-    }
-
+    .hero-card { padding: 24px; }
     .hero-side {
       padding: 22px;
       display: flex;
@@ -76,15 +67,32 @@
       gap: 10px;
     }
 
-    .mini {
-      color: var(--muted);
-      font-size: 13px;
+    .title {
+      font-size: 34px;
+      font-weight: 800;
+      margin: 0 0 8px;
     }
 
-    .path {
-      color: var(--accent);
+    .subtitle, .mini, .muted { color: var(--muted); }
+    .subtitle { line-height: 1.5; margin: 0; }
+    .mini { font-size: 13px; }
+    .path { color: var(--accent); font-weight: 700; word-break: break-word; }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 18px;
+    }
+
+    .nav-tabs a {
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      padding: 10px 14px;
+      border-radius: 999px;
       font-weight: 700;
-      word-break: break-all;
     }
 
     .stats {
@@ -94,30 +102,29 @@
       margin-bottom: 18px;
     }
 
+    .stat, .panel { padding: 18px; }
     .stat {
-      padding: 18px;
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    .stat .label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
+    .stat .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .stat .value { font-size: 30px; font-weight: 800; line-height: 1; }
+    .stat .sub { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 34px 0 14px;
     }
 
-    .stat .value {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .stat .sub {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
+    .section-title h2 {
+      margin: 0;
+      font-size: 24px;
     }
 
     .grid-2 {
@@ -134,22 +141,16 @@
       margin-bottom: 18px;
     }
 
-    .panel {
-      padding: 18px;
-    }
-
-    .panel h2 {
+    .panel h3 {
       margin: 0 0 14px;
       font-size: 19px;
     }
 
-    .chart-box {
-      height: 320px;
-    }
+    .chart-box { height: 300px; }
 
     .filters {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0,1fr));
+      grid-template-columns: repeat(5, minmax(0,1fr));
       gap: 12px;
       margin-bottom: 14px;
     }
@@ -172,8 +173,6 @@
       border: none;
     }
 
-    button:hover { filter: brightness(1.05); }
-
     .list {
       display: grid;
       gap: 8px;
@@ -193,24 +192,9 @@
       background: rgba(255,255,255,.015);
     }
 
-    .list-item .name {
-      font-weight: 700;
-      word-break: break-word;
-    }
-
-    .list-item .meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-      word-break: break-word;
-    }
-
-    .count {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--accent);
-      white-space: nowrap;
-    }
+    .list-item .name { font-weight: 700; word-break: break-word; }
+    .list-item .meta { color: var(--muted); font-size: 12px; margin-top: 4px; word-break: break-word; }
+    .count { font-size: 22px; font-weight: 800; color: var(--accent); white-space: nowrap; }
 
     .table-wrap {
       overflow: auto;
@@ -222,7 +206,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1250px;
+      min-width: 1180px;
       background: var(--panel);
     }
 
@@ -246,9 +230,7 @@
       color: #b9c7da;
     }
 
-    tr:hover td {
-      background: rgba(255,255,255,.02);
-    }
+    tr:hover td { background: rgba(255,255,255,.02); }
 
     .tag {
       display: inline-block;
@@ -280,8 +262,187 @@
       border-color: rgba(52,211,153,.25);
     }
 
-    .muted {
+    .mail-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .mail-list {
+      max-height: 980px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .mail-item {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.02);
+      padding: 14px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .mail-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94,234,212,.35);
+      background: rgba(255,255,255,.03);
+    }
+
+    .mail-item.active {
+      border-color: rgba(94,234,212,.55);
+      background: rgba(94,234,212,.05);
+      box-shadow: inset 0 0 0 1px rgba(94,234,212,.2);
+    }
+
+    .mail-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .mail-subject {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .mail-ip {
+      margin-top: 6px;
       color: var(--muted);
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .mail-snippet {
+      margin-top: 10px;
+      color: #c7d5e8;
+      font-size: 13px;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .mail-view {
+      background: var(--mail-bg);
+      color: var(--mail-text);
+      border-radius: 20px;
+      border: 1px solid var(--mail-border);
+      min-height: 840px;
+      overflow: hidden;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+
+    .mail-window-bar {
+      background: #eff4f9;
+      border-bottom: 1px solid var(--mail-border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #f87171; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #34d399; }
+
+    .mail-header {
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid var(--mail-border);
+      background: white;
+    }
+
+    .mail-header h3 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .header-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 10px 14px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .header-key { color: var(--mail-muted); font-weight: 700; }
+    .header-value { word-break: break-word; }
+
+    .mail-toolbar {
+      display: flex;
+      gap: 10px;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--mail-border);
+      background: #fbfdff;
+      flex-wrap: wrap;
+    }
+
+    .tool-chip {
+      padding: 8px 12px;
+      border: 1px solid var(--mail-border);
+      border-radius: 999px;
+      color: #334155;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mail-body-wrap {
+      padding: 28px;
+      background: linear-gradient(180deg, #ffffff, #f8fbfe);
+    }
+
+    .mail-pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #0f172a;
+    }
+
+    .mail-raw-meta {
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--mail-border);
+      background: #f8fafc;
+      border-radius: 14px;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .empty-state {
+      min-height: 760px;
+      display: grid;
+      place-items: center;
+      padding: 40px;
+      color: var(--muted);
+      text-align: center;
     }
 
     .footer-note {
@@ -290,17 +451,20 @@
       font-size: 12px;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1280px) {
       .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .grid-3 { grid-template-columns: 1fr; }
-      .grid-2, .hero { grid-template-columns: 1fr; }
-      .filters { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .grid-2, .hero, .mail-grid { grid-template-columns: 1fr; }
+      .mail-view { min-height: 520px; }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 720px) {
       .stats { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr; }
       .title { font-size: 28px; }
+      .mail-header h3 { font-size: 22px; }
+      .header-grid { grid-template-columns: 78px 1fr; }
+      .mail-header, .mail-toolbar, .mail-body-wrap { padding-left: 18px; padding-right: 18px; }
     }
   </style>
 </head>
@@ -308,117 +472,129 @@
   <div class="wrap">
     <section class="hero">
       <div class="hero-card">
-        <h1 class="title">ELLE-Dn Honeypot Dashboard</h1>
+        <h1 class="title">ELLE-Dn Unified Honeypot Dashboard</h1>
         <p class="subtitle">
-          Dashboard from our honeypot data.
+          Single-page view for both honeypots: the web event feed and the SMTP mail capture feed,
+          each one loaded from its own log source.
         </p>
       </div>
       <div class="hero-card hero-side">
-        <div class="mini">Data source</div>
-        <div class="path">.honeypot</div>
+        <div class="mini">Web source</div>
+        <div class="path">./eve_inbound.json</div>
+        <div class="mini">Mail source</div>
+        <div class="path">./mail_summary.json</div>
         <div class="mini">Last refresh</div>
         <div id="lastRefresh" class="path">-</div>
       </div>
     </section>
 
+    <div class="nav-tabs">
+      <a href="#web-honeypot">Web honeypot</a>
+      <a href="#mail-honeypot">Mail honeypot</a>
+    </div>
+
+    <div class="section-title" id="web-honeypot">
+      <h2>Web Honeypot</h2>
+      <span class="muted">Powered by <code>eve_inbound.json</code></span>
+    </div>
+
     <section class="stats">
       <div class="stat">
         <div class="label">Total events</div>
-        <div class="value" id="totalEvents">0</div>
-        <div class="sub">logs of the day</div>
+        <div class="value" id="webTotalEvents">0</div>
+        <div class="sub">daily web events</div>
       </div>
       <div class="stat">
         <div class="label">Unique IPs</div>
-        <div class="value" id="uniqueIps">0</div>
+        <div class="value" id="webUniqueIps">0</div>
         <div class="sub">observed sources</div>
       </div>
       <div class="stat">
         <div class="label">Top country</div>
-        <div class="value" id="topCountry">-</div>
-        <div class="sub">Top country</div>
+        <div class="value" id="webTopCountry">-</div>
+        <div class="sub">most active country</div>
       </div>
       <div class="stat">
         <div class="label">Top signature</div>
-        <div class="value" id="topSignature">-</div>
-        <div class="sub">Top signature</div>
+        <div class="value" id="webTopSignature">-</div>
+        <div class="sub">most frequent signature</div>
       </div>
       <div class="stat">
-        <div class="label">Top dest port</div>
-        <div class="value" id="topPort">-</div>
-        <div class="sub">Top dest port</div>
+        <div class="label">Top destination port</div>
+        <div class="value" id="webTopPort">-</div>
+        <div class="sub">most targeted destination port</div>
       </div>
     </section>
 
     <section class="grid-2">
       <div class="panel">
-        <h2>Events per hour</h2>
-        <div class="chart-box"><canvas id="hourlyChart"></canvas></div>
+        <h3>Events per hour</h3>
+        <div class="chart-box"><canvas id="webHourlyChart"></canvas></div>
       </div>
       <div class="panel">
-        <h2>Top countries</h2>
-        <div class="chart-box"><canvas id="countryChart"></canvas></div>
-      </div>
-    </section>
-
-    <section class="grid-2">
-      <div class="panel">
-        <h2>Top signatures</h2>
-        <div class="chart-box"><canvas id="signatureChart"></canvas></div>
-      </div>
-      <div class="panel">
-        <h2>Top URL</h2>
-        <div class="chart-box"><canvas id="urlChart"></canvas></div>
+        <h3>Top countries</h3>
+        <div class="chart-box"><canvas id="webCountryChart"></canvas></div>
       </div>
     </section>
 
     <section class="grid-2">
       <div class="panel">
-        <h2>Top user-agent</h2>
-        <div class="chart-box"><canvas id="uaChart"></canvas></div>
+        <h3>Top signatures</h3>
+        <div class="chart-box"><canvas id="webSignatureChart"></canvas></div>
       </div>
       <div class="panel">
-        <h2>Top IP</h2>
-        <div class="chart-box"><canvas id="ipChart"></canvas></div>
+        <h3>Top URLs</h3>
+        <div class="chart-box"><canvas id="webUrlChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>Top user agents</h3>
+        <div class="chart-box"><canvas id="webUaChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Top source IPs</h3>
+        <div class="chart-box"><canvas id="webIpChart"></canvas></div>
       </div>
     </section>
 
     <section class="grid-3">
       <div class="panel">
-        <h2>Country</h2>
-        <div class="list" id="countryList"></div>
+        <h3>Country list</h3>
+        <div class="list" id="webCountryList"></div>
       </div>
       <div class="panel">
-        <h2>Signature</h2>
-        <div class="list" id="signatureList"></div>
+        <h3>Signature list</h3>
+        <div class="list" id="webSignatureList"></div>
       </div>
       <div class="panel">
-        <h2>Source IP</h2>
-        <div class="list" id="ipList"></div>
+        <h3>Source IP list</h3>
+        <div class="list" id="webIpList"></div>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Log of the day</h2>
+      <h3>Web events table</h3>
       <div class="filters">
-        <input id="filterIp" placeholder="Filter Source IP">
-        <input id="filterCountry" placeholder="Filter Country">
-        <input id="filterSignature" placeholder="Filter Signature">
-        <input id="filterUrl" placeholder="Filter URL">
-        <input id="filterUa" placeholder="Filter user-agent">
-        <input id="filterPort" placeholder="Filter dest port">
+        <input id="webFilterIp" placeholder="Filter source IP">
+        <input id="webFilterCountry" placeholder="Filter country">
+        <input id="webFilterSignature" placeholder="Filter signature">
+        <input id="webFilterUrl" placeholder="Filter URL">
+        <input id="webFilterUa" placeholder="Filter user agent">
       </div>
       <div class="filters" style="grid-template-columns: 1fr 1fr 1fr;">
-        <select id="filterProto">
+        <select id="webFilterProto">
           <option value="">All protocols</option>
         </select>
-        <select id="filterRisk">
-          <option value="">All risks</option>
+        <select id="webFilterRisk">
+          <option value="">All risk levels</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
           <option value="low">Low</option>
           <option value="unknown">Unknown</option>
         </select>
-        <button id="resetFilters">Reset filtri</button>
+        <button id="webResetFilters">Reset filters</button>
       </div>
 
       <div class="table-wrap">
@@ -426,40 +602,139 @@
           <thead>
             <tr>
               <th>Timestamp</th>
-              <th>IP sorgente</th>
+              <th>Source IP</th>
               <th>Country</th>
-              <th>Porta</th>
-              <th>Proto</th>
+              <th>Destination port</th>
+              <th>Protocol</th>
               <th>URL</th>
               <th>Signature</th>
-              <th>User-Agent</th>
+              <th>User agent</th>
               <th>Score</th>
               <th>Reports</th>
               <th>Risk</th>
             </tr>
           </thead>
-          <tbody id="tableBody"></tbody>
+          <tbody id="webTableBody"></tbody>
         </table>
       </div>
-      <div class="footer-note">
-        Logs of the day are shown.
+      <div class="footer-note">Daily web honeypot log entries.</div>
+    </section>
+
+    <div class="section-title" id="mail-honeypot">
+      <h2>Mail Honeypot</h2>
+      <span class="muted">Powered by <code>mail_summary.json</code></span>
+    </div>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="label">Total mails</div>
+        <div class="value" id="mailTotalMails">0</div>
+        <div class="sub">captured messages</div>
       </div>
+      <div class="stat">
+        <div class="label">Unique IPs</div>
+        <div class="value" id="mailUniqueIps">0</div>
+        <div class="sub">unique source IPs</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top sender</div>
+        <div class="value" id="mailTopSender">-</div>
+        <div class="sub">most frequent MAIL FROM</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top recipient</div>
+        <div class="value" id="mailTopRecipient">-</div>
+        <div class="sub">most frequent RCPT TO</div>
+      </div>
+      <div class="stat">
+        <div class="label">Auth attempts</div>
+        <div class="value" id="mailAuthAttempts">0</div>
+        <div class="sub">messages with SMTP auth data</div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>Mails per hour</h3>
+        <div class="chart-box"><canvas id="mailHourlyChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Top source IPs</h3>
+        <div class="chart-box"><canvas id="mailIpChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>Top senders</h3>
+        <div class="chart-box"><canvas id="mailSenderChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Top recipients</h3>
+        <div class="chart-box"><canvas id="mailRecipientChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-3">
+      <div class="panel">
+        <h3>Source IP list</h3>
+        <div class="list" id="mailIpList"></div>
+      </div>
+      <div class="panel">
+        <h3>MAIL FROM list</h3>
+        <div class="list" id="mailSenderList"></div>
+      </div>
+      <div class="panel">
+        <h3>RCPT TO list</h3>
+        <div class="list" id="mailRecipientList"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Mailbox view</h3>
+      <div class="filters">
+        <input id="mailFilterIp" placeholder="Filter source IP">
+        <input id="mailFilterFrom" placeholder="Filter MAIL FROM">
+        <input id="mailFilterTo" placeholder="Filter RCPT TO">
+        <input id="mailFilterSubject" placeholder="Filter subject">
+        <input id="mailFilterBody" placeholder="Filter mail text">
+      </div>
+      <div class="filters" style="grid-template-columns: 1fr 1fr;">
+        <select id="mailFilterAuth">
+          <option value="">All mails</option>
+          <option value="with-auth">Only with AUTH</option>
+          <option value="without-auth">Only without AUTH</option>
+        </select>
+        <button id="mailResetFilters">Reset filters</button>
+      </div>
+
+      <div class="mail-grid">
+        <div class="mail-list" id="mailList"></div>
+        <div class="mail-view" id="mailView">
+          <div class="empty-state">Select an email to view the full captured content.</div>
+        </div>
+      </div>
+      <div class="footer-note">Each message view combines SMTP metadata and the full captured raw message body.</div>
     </section>
   </div>
 
   <script>
-    const DATA_FILE = "./eve_inbound.json";
+    const WEB_DATA_FILE = './eve_inbound.json';
+    const MAIL_DATA_FILE = './mail_summary.json';
     const charts = [];
-    let allEvents = [];
-    let filteredEvents = [];
+    let webEvents = [];
+    let filteredWebEvents = [];
+    let mailMessages = [];
+    let filteredMailMessages = [];
+    let selectedMailIndex = 0;
 
     function nowLabel() {
-      return new Date().toLocaleString("it-IT", { hour12: false });
+      return new Date().toLocaleString('en-GB', { hour12: false });
     }
 
     function parseJsonLines(text) {
       return text
-        .split("\n")
+        .split('\n')
         .map(x => x.trim())
         .filter(Boolean)
         .map(line => {
@@ -473,7 +748,7 @@
       const m = new Map();
       for (const item of arr) {
         const key = fn(item);
-        if (key === undefined || key === null || key === "") continue;
+        if (key === undefined || key === null || key === '') continue;
         m.set(key, (m.get(key) || 0) + 1);
       }
       return [...m.entries()].sort((a,b) => b[1] - a[1]);
@@ -484,33 +759,30 @@
     }
 
     function riskLabel(score) {
-      if (score === undefined || score === null) return "unknown";
-      if (score >= 80) return "high";
-      if (score >= 30) return "medium";
-      return "low";
+      if (score === undefined || score === null) return 'unknown';
+      if (score >= 80) return 'high';
+      if (score >= 30) return 'medium';
+      return 'low';
     }
 
     function riskClass(score) {
       const r = riskLabel(score);
-      if (r === "high") return "risk-high";
-      if (r === "medium") return "risk-med";
-      if (r === "low") return "risk-low";
-      return "";
+      if (r === 'high') return 'risk-high';
+      if (r === 'medium') return 'risk-med';
+      if (r === 'low') return 'risk-low';
+      return '';
     }
 
-    function setSummary(events) {
-      const total = events.length;
-      const uniqueIps = new Set(events.map(e => e.src_ip).filter(Boolean)).size;
-      const topCountry = countBy(events, e => e.country)[0]?.[0] || "-";
-      const topSignature = countBy(events, e => e.signature)[0]?.[0] || "-";
-      const topPort = countBy(events, e => String(e.dest_port ?? ""))[0]?.[0] || "-";
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
 
-      document.getElementById("totalEvents").textContent = total;
-      document.getElementById("uniqueIps").textContent = uniqueIps;
-      document.getElementById("topCountry").textContent = topCountry;
-      document.getElementById("topSignature").textContent = topSignature.length > 26 ? topSignature.slice(0,26) + "…" : topSignature;
-      document.getElementById("topPort").textContent = topPort;
-      document.getElementById("lastRefresh").textContent = nowLabel();
+    function truncateText(value, max=60) {
+      const s = String(value ?? '');
+      return s.length > max ? s.slice(0, max - 1) + '…' : s;
     }
 
     function destroyCharts() {
@@ -522,26 +794,21 @@
         type,
         data: {
           labels,
-          datasets: [{
-            label,
-            data: values
-          }]
+          datasets: [{ label, data: values }]
         },
         options: {
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              labels: { color: "#e7edf7" }
-            }
+            legend: { labels: { color: '#e7edf7' } }
           },
           scales: {
             x: {
-              ticks: { color: "#c8d5e7" },
-              grid: { color: "rgba(255,255,255,.06)" }
+              ticks: { color: '#c8d5e7' },
+              grid: { color: 'rgba(255,255,255,.06)' }
             },
             y: {
-              ticks: { color: "#c8d5e7" },
-              grid: { color: "rgba(255,255,255,.06)" }
+              ticks: { color: '#c8d5e7' },
+              grid: { color: 'rgba(255,255,255,.06)' }
             }
           }
         }
@@ -549,16 +816,111 @@
       charts.push(c);
     }
 
-    function renderCharts(events) {
-      destroyCharts();
+    function renderGroupedList(containerId, items, metaText) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = '';
+      if (!items.length) {
+        el.innerHTML = '<div class="muted">No data available</div>';
+        return;
+      }
 
+      for (const [name, count] of items) {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        row.innerHTML = `
+          <div>
+            <div class="name">${escapeHtml(name)}</div>
+            <div class="meta">${escapeHtml(metaText)}</div>
+          </div>
+          <div class="count">${count}</div>
+        `;
+        el.appendChild(row);
+      }
+    }
+
+    function parseMail(raw) {
+      const text = String(raw ?? '');
+      const normalized = text.replace(/\r\n/g, '\n');
+      const splitIndex = normalized.indexOf('\n\n');
+      const headerText = splitIndex >= 0 ? normalized.slice(0, splitIndex) : normalized;
+      const bodyText = splitIndex >= 0 ? normalized.slice(splitIndex + 2) : '';
+      const headers = {};
+      let currentHeader = null;
+
+      for (const line of headerText.split('\n')) {
+        if (!line.trim()) continue;
+        if (/^[ \t]/.test(line) && currentHeader) {
+          headers[currentHeader] += ' ' + line.trim();
+          continue;
+        }
+        const idx = line.indexOf(':');
+        if (idx > 0) {
+          const key = line.slice(0, idx).trim();
+          const value = line.slice(idx + 1).trim();
+          headers[key] = value;
+          currentHeader = key;
+        }
+      }
+
+      return {
+        headers,
+        body: bodyText,
+        subject: headers.Subject || '(no subject)',
+        fromHeader: headers.From || '',
+        toHeader: headers.To || '',
+        dateHeader: headers.Date || ''
+      };
+    }
+
+    function normalizeMailMessages(data) {
+      const list = Array.isArray(data?.messages) ? data.messages : [];
+      return list.map((msg, idx) => {
+        const parsed = parseMail(msg.message_raw || '');
+        const rcpt = Array.isArray(msg.rcpt_to) ? msg.rcpt_to : [];
+        const auth = msg.auth && (msg.auth.mechanism || msg.auth.username || msg.auth.password) ? msg.auth : null;
+        return {
+          id: idx,
+          timestamp: msg.timestamp || '',
+          src_ip: msg.src_ip || '',
+          helo: msg.helo || '',
+          mail_from: msg.mail_from || '',
+          rcpt_to: rcpt,
+          auth,
+          message_raw: msg.message_raw || '',
+          subject: parsed.subject,
+          body: parsed.body,
+          from_header: parsed.fromHeader,
+          to_header: parsed.toHeader,
+          date_header: parsed.dateHeader,
+          headers: parsed.headers,
+          snippet: (parsed.body || msg.message_raw || '').replace(/\s+/g, ' ').trim()
+        };
+      }).sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)));
+    }
+
+    function setWebSummary(events) {
+      document.getElementById('webTotalEvents').textContent = events.length;
+      document.getElementById('webUniqueIps').textContent = new Set(events.map(e => e.src_ip).filter(Boolean)).size;
+      document.getElementById('webTopCountry').textContent = countBy(events, e => e.country)[0]?.[0] || '-';
+      document.getElementById('webTopSignature').textContent = truncateText(countBy(events, e => e.signature)[0]?.[0] || '-', 26);
+      document.getElementById('webTopPort').textContent = countBy(events, e => String(e.dest_port ?? ''))[0]?.[0] || '-';
+    }
+
+    function setMailSummary(messages) {
+      document.getElementById('mailTotalMails').textContent = messages.length;
+      document.getElementById('mailUniqueIps').textContent = new Set(messages.map(m => m.src_ip).filter(Boolean)).size;
+      document.getElementById('mailTopSender').textContent = truncateText(countBy(messages, m => m.mail_from)[0]?.[0] || '-', 22);
+      document.getElementById('mailTopRecipient').textContent = truncateText(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r)[0]?.[0] || '-', 22);
+      document.getElementById('mailAuthAttempts').textContent = messages.filter(m => !!m.auth).length;
+    }
+
+    function renderWebCharts(events) {
       const countries = topN(countBy(events, e => e.country), 10);
       const signatures = topN(countBy(events, e => e.signature), 10);
       const urls = topN(countBy(events, e => e.url), 10);
       const uas = topN(countBy(events, e => e.user_agent), 10);
       const ips = topN(countBy(events, e => e.src_ip), 10);
-
-      const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, "0"), 0]);
+      const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, '0'), 0]);
       const hourMap = new Map(hourly);
       for (const e of events) {
         if (!e.timestamp) continue;
@@ -566,168 +928,287 @@
         if (hourMap.has(h)) hourMap.set(h, hourMap.get(h) + 1);
       }
 
-      makeChart("hourlyChart", "line", [...hourMap.keys()], [...hourMap.values()], "Eventi");
-      makeChart("countryChart", "bar", countries.map(x => x[0]), countries.map(x => x[1]), "Eventi");
-      makeChart("signatureChart", "bar", signatures.map(x => x[0]), signatures.map(x => x[1]), "Eventi");
-      makeChart("urlChart", "bar", urls.map(x => x[0]), urls.map(x => x[1]), "Eventi");
-      makeChart("uaChart", "bar", uas.map(x => x[0]), uas.map(x => x[1]), "Eventi");
-      makeChart("ipChart", "bar", ips.map(x => x[0]), ips.map(x => x[1]), "Eventi");
+      makeChart('webHourlyChart', 'line', [...hourMap.keys()], [...hourMap.values()], 'Events');
+      makeChart('webCountryChart', 'bar', countries.map(x => x[0]), countries.map(x => x[1]), 'Events');
+      makeChart('webSignatureChart', 'bar', signatures.map(x => truncateText(x[0], 28)), signatures.map(x => x[1]), 'Events');
+      makeChart('webUrlChart', 'bar', urls.map(x => truncateText(x[0], 28)), urls.map(x => x[1]), 'Events');
+      makeChart('webUaChart', 'bar', uas.map(x => truncateText(x[0], 28)), uas.map(x => x[1]), 'Events');
+      makeChart('webIpChart', 'bar', ips.map(x => x[0]), ips.map(x => x[1]), 'Events');
     }
 
-    function renderGroupedList(containerId, items, formatter) {
-      const el = document.getElementById(containerId);
-      el.innerHTML = "";
-      if (!items.length) {
-        el.innerHTML = `<div class="muted">Nessun dato disponibile</div>`;
-        return;
+    function renderMailCharts(messages) {
+      const ips = topN(countBy(messages, m => m.src_ip), 10);
+      const senders = topN(countBy(messages, m => m.mail_from), 10);
+      const recipients = topN(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r), 10);
+      const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, '0'), 0]);
+      const hourMap = new Map(hourly);
+      for (const m of messages) {
+        if (!m.timestamp) continue;
+        const h = m.timestamp.slice(11, 13);
+        if (hourMap.has(h)) hourMap.set(h, hourMap.get(h) + 1);
       }
 
-      for (const [name, count] of items) {
-        const row = document.createElement("div");
-        row.className = "list-item";
-        row.innerHTML = formatter(name, count);
-        el.appendChild(row);
-      }
+      makeChart('mailHourlyChart', 'line', [...hourMap.keys()], [...hourMap.values()], 'Mails');
+      makeChart('mailIpChart', 'bar', ips.map(x => x[0]), ips.map(x => x[1]), 'Mails');
+      makeChart('mailSenderChart', 'bar', senders.map(x => truncateText(x[0], 24)), senders.map(x => x[1]), 'Mails');
+      makeChart('mailRecipientChart', 'bar', recipients.map(x => truncateText(x[0], 24)), recipients.map(x => x[1]), 'Mails');
     }
 
-    function renderGroupings(events) {
-      const countries = topN(countBy(events, e => e.country), 20);
-      const signatures = topN(countBy(events, e => e.signature), 20);
-      const ips = topN(countBy(events, e => e.src_ip), 20);
-
-      renderGroupedList("countryList", countries, (name, count) => `
-        <div>
-          <div class="name">${escapeHtml(name)}</div>
-          <div class="meta">Eventi osservati dal paese</div>
-        </div>
-        <div class="count">${count}</div>
-      `);
-
-      renderGroupedList("signatureList", signatures, (name, count) => `
-        <div>
-          <div class="name">${escapeHtml(name)}</div>
-          <div class="meta">Signature osservata nel log</div>
-        </div>
-        <div class="count">${count}</div>
-      `);
-
-      renderGroupedList("ipList", ips, (name, count) => `
-        <div>
-          <div class="name">${escapeHtml(name)}</div>
-          <div class="meta">Sorgente osservata nel dataset</div>
-        </div>
-        <div class="count">${count}</div>
-      `);
+    function renderWebLists(events) {
+      renderGroupedList('webCountryList', topN(countBy(events, e => e.country), 20), 'Observed country in the dataset');
+      renderGroupedList('webSignatureList', topN(countBy(events, e => e.signature), 20), 'Observed signature in the dataset');
+      renderGroupedList('webIpList', topN(countBy(events, e => e.src_ip), 20), 'Observed source IP in the dataset');
     }
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;");
+    function renderMailLists(messages) {
+      renderGroupedList('mailIpList', topN(countBy(messages, m => m.src_ip), 20), 'Observed source IP in the dataset');
+      renderGroupedList('mailSenderList', topN(countBy(messages, m => m.mail_from), 20), 'Observed MAIL FROM in the dataset');
+      renderGroupedList('mailRecipientList', topN(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r), 20), 'Observed RCPT TO in the dataset');
     }
 
-    function renderTable(events) {
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
-
+    function renderWebTable(events) {
+      const tbody = document.getElementById('webTableBody');
+      tbody.innerHTML = '';
       for (const e of events) {
-        const tr = document.createElement("tr");
         const risk = riskLabel(e.score);
+        const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${escapeHtml(e.timestamp || "")}</td>
-          <td>${escapeHtml(e.src_ip || "")}</td>
-          <td>
-            ${escapeHtml(e.country || "")}
-            ${e.country_code ? `<span class="tag">${escapeHtml(e.country_code)}</span>` : ""}
-          </td>
-          <td>${escapeHtml(e.dest_port ?? "")}</td>
-          <td>${escapeHtml(e.app_proto || "")}</td>
-          <td>${escapeHtml(e.url || "")}</td>
-          <td>${escapeHtml(e.signature || "")}</td>
-          <td>${escapeHtml(e.user_agent || "")}</td>
-          <td>${escapeHtml(e.score ?? "")}</td>
-          <td>${escapeHtml(e.reports ?? "")}</td>
+          <td>${escapeHtml(e.timestamp || '')}</td>
+          <td>${escapeHtml(e.src_ip || '')}</td>
+          <td>${escapeHtml(e.country || '')} ${e.country_code ? `<span class="tag">${escapeHtml(e.country_code)}</span>` : ''}</td>
+          <td>${escapeHtml(e.dest_port ?? '')}</td>
+          <td>${escapeHtml(e.app_proto || '')}</td>
+          <td>${escapeHtml(e.url || '')}</td>
+          <td>${escapeHtml(e.signature || '')}</td>
+          <td>${escapeHtml(e.user_agent || '')}</td>
+          <td>${escapeHtml(e.score ?? '')}</td>
+          <td>${escapeHtml(e.reports ?? '')}</td>
           <td><span class="tag ${riskClass(e.score)}">${risk}</span></td>
         `;
         tbody.appendChild(tr);
       }
     }
 
-    function fillProtoFilter(events) {
-      const select = document.getElementById("filterProto");
+    function fillWebProtoFilter(events) {
+      const select = document.getElementById('webFilterProto');
       const values = [...new Set(events.map(e => e.app_proto).filter(Boolean))].sort();
-      select.innerHTML = `<option value="">Tutti i protocolli</option>`;
+      select.innerHTML = '<option value="">All protocols</option>';
       for (const v of values) {
-        const o = document.createElement("option");
+        const o = document.createElement('option');
         o.value = v;
         o.textContent = v;
         select.appendChild(o);
       }
     }
 
-    function applyFilters() {
-      const ip = document.getElementById("filterIp").value.trim().toLowerCase();
-      const country = document.getElementById("filterCountry").value.trim().toLowerCase();
-      const signature = document.getElementById("filterSignature").value.trim().toLowerCase();
-      const url = document.getElementById("filterUrl").value.trim().toLowerCase();
-      const ua = document.getElementById("filterUa").value.trim().toLowerCase();
-      const port = document.getElementById("filterPort").value.trim().toLowerCase();
-      const proto = document.getElementById("filterProto").value.trim().toLowerCase();
-      const risk = document.getElementById("filterRisk").value.trim().toLowerCase();
+    function applyWebFilters() {
+      const ip = document.getElementById('webFilterIp').value.trim().toLowerCase();
+      const country = document.getElementById('webFilterCountry').value.trim().toLowerCase();
+      const signature = document.getElementById('webFilterSignature').value.trim().toLowerCase();
+      const url = document.getElementById('webFilterUrl').value.trim().toLowerCase();
+      const ua = document.getElementById('webFilterUa').value.trim().toLowerCase();
+      const proto = document.getElementById('webFilterProto').value.trim().toLowerCase();
+      const risk = document.getElementById('webFilterRisk').value.trim().toLowerCase();
 
-      filteredEvents = allEvents.filter(e => {
-        if (ip && !String(e.src_ip || "").toLowerCase().includes(ip)) return false;
-        if (country && !String(e.country || "").toLowerCase().includes(country)) return false;
-        if (signature && !String(e.signature || "").toLowerCase().includes(signature)) return false;
-        if (url && !String(e.url || "").toLowerCase().includes(url)) return false;
-        if (ua && !String(e.user_agent || "").toLowerCase().includes(ua)) return false;
-        if (port && !String(e.dest_port || "").toLowerCase().includes(port)) return false;
-        if (proto && String(e.app_proto || "").toLowerCase() !== proto) return false;
+      filteredWebEvents = webEvents.filter(e => {
+        if (ip && !String(e.src_ip || '').toLowerCase().includes(ip)) return false;
+        if (country && !String(e.country || '').toLowerCase().includes(country)) return false;
+        if (signature && !String(e.signature || '').toLowerCase().includes(signature)) return false;
+        if (url && !String(e.url || '').toLowerCase().includes(url)) return false;
+        if (ua && !String(e.user_agent || '').toLowerCase().includes(ua)) return false;
+        if (proto && String(e.app_proto || '').toLowerCase() !== proto) return false;
         if (risk && riskLabel(e.score) !== risk) return false;
         return true;
       });
 
-      renderTable(filteredEvents);
+      renderWebTable(filteredWebEvents);
     }
 
-    function initFilters() {
-      const ids = [
-        "filterIp", "filterCountry", "filterSignature",
-        "filterUrl", "filterUa", "filterPort", "filterProto", "filterRisk"
-      ];
-      ids.forEach(id => document.getElementById(id).addEventListener("input", applyFilters));
-      ids.forEach(id => document.getElementById(id).addEventListener("change", applyFilters));
+    function renderMailList(messages) {
+      const list = document.getElementById('mailList');
+      list.innerHTML = '';
 
-      document.getElementById("resetFilters").addEventListener("click", () => {
-        ids.forEach(id => document.getElementById(id).value = "");
-        filteredEvents = [...allEvents];
-        renderTable(filteredEvents);
+      if (!messages.length) {
+        list.innerHTML = '<div class="muted">No emails found with the current filters.</div>';
+        document.getElementById('mailView').innerHTML = '<div class="empty-state">No email to display.</div>';
+        return;
+      }
+
+      if (selectedMailIndex >= messages.length) selectedMailIndex = 0;
+
+      messages.forEach((msg, index) => {
+        const item = document.createElement('div');
+        item.className = 'mail-item' + (index === selectedMailIndex ? ' active' : '');
+        item.innerHTML = `
+          <div class="mail-top">
+            <div class="mail-subject">${escapeHtml(msg.subject)}</div>
+            <span class="badge">${msg.auth ? 'AUTH' : 'SMTP'}</span>
+          </div>
+          <div class="mail-ip">${escapeHtml(msg.src_ip)} · ${escapeHtml(msg.timestamp)}</div>
+          <div class="mail-ip">FROM ${escapeHtml(msg.mail_from || '-')}</div>
+          <div class="mail-ip">TO ${escapeHtml(msg.rcpt_to.join(', ') || '-')}</div>
+          <div class="mail-snippet">${escapeHtml(msg.snippet || '(empty body)')}</div>
+        `;
+        item.addEventListener('click', () => {
+          selectedMailIndex = index;
+          renderMailList(filteredMailMessages);
+          renderMailView(filteredMailMessages[selectedMailIndex]);
+        });
+        list.appendChild(item);
+      });
+
+      renderMailView(messages[selectedMailIndex]);
+    }
+
+    function renderMailView(msg) {
+      const view = document.getElementById('mailView');
+      if (!msg) {
+        view.innerHTML = '<div class="empty-state">Select an email to view the full captured content.</div>';
+        return;
+      }
+
+      const authChips = msg.auth
+        ? `
+          <span class="tool-chip">AUTH ${escapeHtml(msg.auth.mechanism || 'unknown')}</span>
+          ${msg.auth.username ? `<span class="tool-chip">user: ${escapeHtml(msg.auth.username)}</span>` : ''}
+          ${msg.auth.password ? `<span class="tool-chip">pass: ${escapeHtml(msg.auth.password)}</span>` : ''}
+        `
+        : '<span class="tool-chip">No AUTH</span>';
+
+      view.innerHTML = `
+        <div class="mail-window-bar">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="mail-header">
+          <h3>${escapeHtml(msg.subject)}</h3>
+          <div class="header-grid">
+            <div class="header-key">From</div>
+            <div class="header-value">${escapeHtml(msg.from_header || msg.mail_from || '-')}</div>
+
+            <div class="header-key">To</div>
+            <div class="header-value">${escapeHtml(msg.to_header || msg.rcpt_to.join(', ') || '-')}</div>
+
+            <div class="header-key">SMTP From</div>
+            <div class="header-value">${escapeHtml(msg.mail_from || '-')}</div>
+
+            <div class="header-key">RCPT TO</div>
+            <div class="header-value">${escapeHtml(msg.rcpt_to.join(', ') || '-')}</div>
+
+            <div class="header-key">Source IP</div>
+            <div class="header-value">${escapeHtml(msg.src_ip || '-')}</div>
+
+            <div class="header-key">Timestamp</div>
+            <div class="header-value">${escapeHtml(msg.timestamp || '-')}</div>
+
+            <div class="header-key">HELO</div>
+            <div class="header-value">${escapeHtml(msg.helo || '-')}</div>
+
+            <div class="header-key">Date</div>
+            <div class="header-value">${escapeHtml(msg.date_header || '-')}</div>
+          </div>
+        </div>
+        <div class="mail-toolbar">
+          <span class="tool-chip">Captured email</span>
+          ${authChips}
+        </div>
+        <div class="mail-body-wrap">
+          <div class="mail-raw-meta">
+            This view combines SMTP metadata and the raw message captured by the honeypot.
+          </div>
+          <pre class="mail-pre">${escapeHtml(msg.message_raw || '(empty message)')}</pre>
+        </div>
+      `;
+    }
+
+    function applyMailFilters() {
+      const ip = document.getElementById('mailFilterIp').value.trim().toLowerCase();
+      const from = document.getElementById('mailFilterFrom').value.trim().toLowerCase();
+      const to = document.getElementById('mailFilterTo').value.trim().toLowerCase();
+      const subject = document.getElementById('mailFilterSubject').value.trim().toLowerCase();
+      const body = document.getElementById('mailFilterBody').value.trim().toLowerCase();
+      const auth = document.getElementById('mailFilterAuth').value.trim().toLowerCase();
+
+      filteredMailMessages = mailMessages.filter(m => {
+        if (ip && !String(m.src_ip || '').toLowerCase().includes(ip)) return false;
+        if (from && !String(m.mail_from || '').toLowerCase().includes(from) && !String(m.from_header || '').toLowerCase().includes(from)) return false;
+        if (to) {
+          const rcptJoined = (m.rcpt_to || []).join(' ').toLowerCase();
+          const toHeader = String(m.to_header || '').toLowerCase();
+          if (!rcptJoined.includes(to) && !toHeader.includes(to)) return false;
+        }
+        if (subject && !String(m.subject || '').toLowerCase().includes(subject)) return false;
+        if (body && !String(m.message_raw || '').toLowerCase().includes(body)) return false;
+        if (auth === 'with-auth' && !m.auth) return false;
+        if (auth === 'without-auth' && m.auth) return false;
+        return true;
+      });
+
+      selectedMailIndex = 0;
+      renderMailList(filteredMailMessages);
+    }
+
+    function initWebFilters() {
+      const ids = ['webFilterIp', 'webFilterCountry', 'webFilterSignature', 'webFilterUrl', 'webFilterUa', 'webFilterProto', 'webFilterRisk'];
+      ids.forEach(id => {
+        document.getElementById(id).addEventListener('input', applyWebFilters);
+        document.getElementById(id).addEventListener('change', applyWebFilters);
+      });
+      document.getElementById('webResetFilters').addEventListener('click', () => {
+        ids.forEach(id => document.getElementById(id).value = '');
+        filteredWebEvents = [...webEvents];
+        renderWebTable(filteredWebEvents);
+      });
+    }
+
+    function initMailFilters() {
+      const ids = ['mailFilterIp', 'mailFilterFrom', 'mailFilterTo', 'mailFilterSubject', 'mailFilterBody', 'mailFilterAuth'];
+      ids.forEach(id => {
+        document.getElementById(id).addEventListener('input', applyMailFilters);
+        document.getElementById(id).addEventListener('change', applyMailFilters);
+      });
+      document.getElementById('mailResetFilters').addEventListener('click', () => {
+        ids.forEach(id => document.getElementById(id).value = '');
+        filteredMailMessages = [...mailMessages];
+        selectedMailIndex = 0;
+        renderMailList(filteredMailMessages);
       });
     }
 
     async function loadData() {
-      const response = await fetch(`${DATA_FILE}?ts=${Date.now()}`, { cache: "no-store" });
-      const text = await response.text();
-      const events = parseJsonLines(text).sort((a, b) =>
-        String(b.timestamp || "").localeCompare(String(a.timestamp || ""))
-      );
+      const [webResponse, mailResponse] = await Promise.all([
+        fetch(`${WEB_DATA_FILE}?ts=${Date.now()}`, { cache: 'no-store' }),
+        fetch(`${MAIL_DATA_FILE}?ts=${Date.now()}`, { cache: 'no-store' })
+      ]);
 
-      allEvents = events;
-      filteredEvents = [...events];
+      const webText = await webResponse.text();
+      const mailJson = await mailResponse.json();
 
-      setSummary(allEvents);
-      fillProtoFilter(allEvents);
-      renderCharts(allEvents);
-      renderGroupings(allEvents);
-      renderTable(allEvents);
+      webEvents = parseJsonLines(webText).sort((a, b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+      filteredWebEvents = [...webEvents];
+      mailMessages = normalizeMailMessages(mailJson);
+      filteredMailMessages = [...mailMessages];
+
+      destroyCharts();
+      setWebSummary(webEvents);
+      setMailSummary(mailMessages);
+      fillWebProtoFilter(webEvents);
+      renderWebCharts(webEvents);
+      renderMailCharts(mailMessages);
+      renderWebLists(webEvents);
+      renderMailLists(mailMessages);
+      renderWebTable(webEvents);
+      renderMailList(mailMessages);
+      document.getElementById('lastRefresh').textContent = nowLabel();
     }
 
-    initFilters();
+    initWebFilters();
+    initMailFilters();
     loadData().catch(err => {
       document.body.insertAdjacentHTML(
-        "beforeend",
-        `<div style="padding:20px;color:#fecaca">Errore caricamento dati: ${escapeHtml(err.message || err)}</div>`
+        'beforeend',
+        `<div style="padding:20px;color:#fecaca">Data loading error: ${escapeHtml(err.message || err)}</div>`
       );
       console.error(err);
     });
