@@ -4,22 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ELLE-Dn Unified Honeypot Dashboard</title>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
   <style>
     :root{
       --bg:#07111f;
+      --bg-2:#091528;
       --panel:#0d1726;
       --panel-2:#101c2e;
+      --panel-3:#0b1422;
       --border:#22324a;
       --text:#e7edf7;
       --muted:#9fb0c7;
       --accent:#5eead4;
       --accent-2:#60a5fa;
+      --accent-3:#8b5cf6;
       --danger:#f87171;
       --warn:#fbbf24;
       --ok:#34d399;
       --shadow:0 10px 30px rgba(0,0,0,.28);
+      --shadow-lg:0 18px 50px rgba(0,0,0,.38);
       --radius:18px;
+      --radius-sm:14px;
       --mail-bg:#f8fafc;
       --mail-text:#0f172a;
       --mail-muted:#64748b;
@@ -28,55 +38,116 @@
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(96,165,250,.10), transparent 28%),
-        radial-gradient(circle at top right, rgba(94,234,212,.08), transparent 24%),
-        var(--bg);
+        radial-gradient(circle at top left, rgba(96,165,250,.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(94,234,212,.09), transparent 24%),
+        radial-gradient(circle at center top, rgba(139,92,246,.08), transparent 26%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
       color: var(--text);
     }
 
     .wrap {
-      max-width: 1600px;
+      max-width: 1650px;
       margin: 0 auto;
       padding: 28px 20px 40px;
     }
 
     .hero {
       display: grid;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1fr;
       gap: 18px;
       margin-bottom: 18px;
     }
 
-    .hero-card, .panel {
-      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--panel);
+    .hero-card, .panel, .stat {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), transparent),
+        var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
 
-    .hero-card { padding: 24px; }
-    .hero-side {
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
+    .hero-card {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -60px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(94,234,212,.16), transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-topline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(94,234,212,.07);
+      border: 1px solid rgba(94,234,212,.18);
+      color: #c7fff6;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .title {
-      font-size: 34px;
-      font-weight: 800;
-      margin: 0 0 8px;
+      font-size: 38px;
+      font-weight: 900;
+      margin: 0 0 10px;
+      line-height: 1.05;
+      max-width: 900px;
     }
 
     .subtitle, .mini, .muted { color: var(--muted); }
-    .subtitle { line-height: 1.5; margin: 0; }
-    .mini { font-size: 13px; }
-    .path { color: var(--accent); font-weight: 700; word-break: break-word; }
+    .subtitle {
+      line-height: 1.65;
+      margin: 0;
+      max-width: 900px;
+      font-size: 15px;
+    }
+
+    .hero-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      font-weight: 700;
+      color: #d5e0ef;
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 12px rgba(52,211,153,.7);
+    }
 
     .nav-tabs {
       display: flex;
@@ -92,7 +163,14 @@
       background: var(--panel-2);
       padding: 10px 14px;
       border-radius: 999px;
-      font-weight: 700;
+      font-weight: 800;
+      transition: .16s ease;
+    }
+
+    .nav-tabs a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94,234,212,.35);
+      box-shadow: 0 0 0 1px rgba(94,234,212,.10) inset;
     }
 
     .stats {
@@ -103,15 +181,35 @@
     }
 
     .stat, .panel { padding: 18px; }
+
     .stat {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--accent-3));
+      opacity: .9;
+    }
+
+    .panel:hover, .stat:hover {
+      transform: translateY(-2px);
+      border-color: rgba(94,234,212,.35);
+      box-shadow: var(--shadow-lg);
     }
 
     .stat .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-    .stat .value { font-size: 30px; font-weight: 800; line-height: 1; }
+    .stat .value {
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1;
+      word-break: break-word;
+    }
     .stat .sub { margin-top: 10px; font-size: 12px; color: var(--muted); }
 
     .section-title {
@@ -146,7 +244,15 @@
       font-size: 19px;
     }
 
-    .chart-box { height: 300px; }
+    .panel-sub {
+      margin: -6px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chart-box { height: 320px; }
+    #attackMap { height: 320px; }
 
     .filters {
       display: grid;
@@ -165,18 +271,31 @@
       outline: none;
     }
 
+    input::placeholder { color: #8ca0bb; }
+
+    input:focus, select:focus {
+      border-color: rgba(94,234,212,.45);
+      box-shadow: 0 0 0 3px rgba(94,234,212,.10);
+    }
+
     button {
       cursor: pointer;
       background: linear-gradient(135deg, var(--accent-2), var(--accent));
       color: #07111f;
-      font-weight: 800;
+      font-weight: 900;
       border: none;
+      transition: transform .14s ease, opacity .14s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: .96;
     }
 
     .list {
       display: grid;
       gap: 8px;
-      max-height: 380px;
+      max-height: 420px;
       overflow: auto;
       padding-right: 4px;
     }
@@ -190,11 +309,27 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       background: rgba(255,255,255,.015);
+      transition: .14s ease;
     }
 
-    .list-item .name { font-weight: 700; word-break: break-word; }
+    .list-item.clickable {
+      cursor: pointer;
+    }
+
+    .list-item.clickable:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94,234,212,.35);
+      background: rgba(255,255,255,.03);
+    }
+
+    .list-item .name { font-weight: 800; word-break: break-word; }
     .list-item .meta { color: var(--muted); font-size: 12px; margin-top: 4px; word-break: break-word; }
-    .count { font-size: 22px; font-weight: 800; color: var(--accent); white-space: nowrap; }
+    .count {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--accent);
+      white-space: nowrap;
+    }
 
     .table-wrap {
       overflow: auto;
@@ -234,7 +369,7 @@
 
     .tag {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: rgba(255,255,255,.02);
@@ -242,6 +377,17 @@
       color: var(--muted);
       margin-right: 6px;
       margin-bottom: 4px;
+    }
+
+    .tag.clickable {
+      cursor: pointer;
+      transition: .14s ease;
+    }
+
+    .tag.clickable:hover {
+      border-color: rgba(94,234,212,.35);
+      color: #dffef8;
+      background: rgba(94,234,212,.07);
     }
 
     .risk-high {
@@ -260,6 +406,92 @@
       color: #bbf7d0;
       background: rgba(52,211,153,.10);
       border-color: rgba(52,211,153,.25);
+    }
+
+    .critical-feed {
+      display: grid;
+      gap: 10px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .critical-item {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(248,113,113,.06), rgba(255,255,255,.015));
+      transition: .15s ease;
+      cursor: pointer;
+    }
+
+    .critical-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(248,113,113,.35);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+    }
+
+    .critical-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .critical-title {
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #ffe1e1;
+    }
+
+    .critical-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .critical-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .spotlight-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .spotlight-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,.015);
+    }
+
+    .spotlight-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .spotlight-value {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .spotlight-sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .mail-grid {
@@ -307,7 +539,7 @@
 
     .mail-subject {
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 900;
       line-height: 1.35;
       word-break: break-word;
     }
@@ -336,7 +568,7 @@
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       border: 1px solid var(--border);
       background: rgba(255,255,255,.03);
       color: var(--muted);
@@ -388,7 +620,7 @@
       line-height: 1.45;
     }
 
-    .header-key { color: var(--mail-muted); font-weight: 700; }
+    .header-key { color: var(--mail-muted); font-weight: 800; }
     .header-value { word-break: break-word; }
 
     .mail-toolbar {
@@ -407,7 +639,7 @@
       color: #334155;
       background: #fff;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .mail-body-wrap {
@@ -451,20 +683,33 @@
       font-size: 12px;
     }
 
+    .tiny-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      margin: 4px 0 10px;
+    }
+
     @media (max-width: 1280px) {
       .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .grid-3 { grid-template-columns: 1fr; }
-      .grid-2, .hero, .mail-grid { grid-template-columns: 1fr; }
+      .grid-2, .mail-grid { grid-template-columns: 1fr; }
       .mail-view { min-height: 520px; }
     }
 
     @media (max-width: 720px) {
       .stats { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr; }
-      .title { font-size: 28px; }
+      .title { font-size: 30px; }
       .mail-header h3 { font-size: 22px; }
       .header-grid { grid-template-columns: 78px 1fr; }
       .mail-header, .mail-toolbar, .mail-body-wrap { padding-left: 18px; padding-right: 18px; }
+      .hero-card { padding: 22px; }
     }
   </style>
 </head>
@@ -472,19 +717,23 @@
   <div class="wrap">
     <section class="hero">
       <div class="hero-card">
+        <div class="hero-topline">
+          <span class="dot-live"></span>
+          Unified Threat Telemetry
+        </div>
         <h1 class="title">ELLE-Dn Unified Honeypot Dashboard</h1>
         <p class="subtitle">
-          Single-page view for both honeypots: the web event feed and the SMTP mail capture feed,
-          each one loaded from its own log source.
+          A single command-center view for malicious activity observed by the web honeypot and the SMTP honeypot.
+          Explore attack origin countries, top signatures, suspicious senders, targeted recipients and raw captured payloads.
         </p>
-      </div>
-      <div class="hero-card hero-side">
-        <div class="mini">Web source</div>
-        <div class="path">./eve_inbound.json</div>
-        <div class="mini">Mail source</div>
-        <div class="path">./mail_summary.json</div>
-        <div class="mini">Last refresh</div>
-        <div id="lastRefresh" class="path">-</div>
+
+        <div class="hero-kpis">
+          <span class="hero-chip">Web + SMTP unified view</span>
+          <span class="hero-chip">Interactive threat filtering</span>
+          <span class="hero-chip">Country attack map</span>
+          <span class="hero-chip">Critical event spotlight</span>
+          <span class="hero-chip" id="heroRefreshChip">Last update: —</span>
+        </div>
       </div>
     </section>
 
@@ -495,7 +744,7 @@
 
     <div class="section-title" id="web-honeypot">
       <h2>Web Honeypot</h2>
-      <span class="muted">Powered by <code>eve_inbound.json</code></span>
+      <span class="muted">Threats, patterns and incoming attack surface</span>
     </div>
 
     <section class="stats">
@@ -528,34 +777,84 @@
 
     <section class="grid-2">
       <div class="panel">
+        <h3>Global attack map</h3>
+        <p class="panel-sub">
+          Countries are shaded by the number of observed attack events. Hover to inspect each region.
+        </p>
+        <div id="attackMap"></div>
+        <div class="tiny-note">Tip: use the country list below to click-filter the entire web dashboard.</div>
+      </div>
+
+      <div class="panel">
+        <h3>Latest critical web events</h3>
+        <p class="panel-sub">
+          Most recent high-risk events based on score. Click an item to filter by IP.
+        </p>
+        <div class="critical-feed" id="criticalWebFeed"></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>Threat spotlight</h3>
+        <p class="panel-sub">
+          Quick highlights extracted from the current web dataset.
+        </p>
+        <div class="spotlight-grid">
+          <div class="spotlight-card">
+            <div class="spotlight-label">Most aggressive IP</div>
+            <div class="spotlight-value" id="spotlightIp">-</div>
+            <div class="spotlight-sub" id="spotlightIpSub">No data available yet.</div>
+          </div>
+          <div class="spotlight-card">
+            <div class="spotlight-label">Most targeted URL</div>
+            <div class="spotlight-value" id="spotlightUrl">-</div>
+            <div class="spotlight-sub" id="spotlightUrlSub">No data available yet.</div>
+          </div>
+          <div class="spotlight-card">
+            <div class="spotlight-label">Most dangerous signature</div>
+            <div class="spotlight-value" id="spotlightSignature">-</div>
+            <div class="spotlight-sub" id="spotlightSignatureSub">No data available yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
         <h3>Events per hour</h3>
         <div class="chart-box"><canvas id="webHourlyChart"></canvas></div>
       </div>
+    </section>
+
+    <section class="grid-2">
       <div class="panel">
         <h3>Top countries</h3>
         <div class="chart-box"><canvas id="webCountryChart"></canvas></div>
       </div>
-    </section>
-
-    <section class="grid-2">
       <div class="panel">
         <h3>Top signatures</h3>
         <div class="chart-box"><canvas id="webSignatureChart"></canvas></div>
       </div>
+    </section>
+
+    <section class="grid-2">
       <div class="panel">
         <h3>Top URLs</h3>
         <div class="chart-box"><canvas id="webUrlChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Top user agents</h3>
+        <div class="chart-box"><canvas id="webUaChart"></canvas></div>
       </div>
     </section>
 
     <section class="grid-2">
       <div class="panel">
-        <h3>Top user agents</h3>
-        <div class="chart-box"><canvas id="webUaChart"></canvas></div>
-      </div>
-      <div class="panel">
         <h3>Top source IPs</h3>
         <div class="chart-box"><canvas id="webIpChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Top destination ports</h3>
+        <div class="chart-box"><canvas id="webPortChart"></canvas></div>
       </div>
     </section>
 
@@ -576,6 +875,10 @@
 
     <section class="panel">
       <h3>Web events table</h3>
+      <p class="panel-sub">
+        Filter events by IP, country, signature, URL, user agent, protocol or risk level.
+      </p>
+
       <div class="filters">
         <input id="webFilterIp" placeholder="Filter source IP">
         <input id="webFilterCountry" placeholder="Filter country">
@@ -583,10 +886,12 @@
         <input id="webFilterUrl" placeholder="Filter URL">
         <input id="webFilterUa" placeholder="Filter user agent">
       </div>
+
       <div class="filters" style="grid-template-columns: 1fr 1fr 1fr;">
         <select id="webFilterProto">
           <option value="">All protocols</option>
         </select>
+
         <select id="webFilterRisk">
           <option value="">All risk levels</option>
           <option value="high">High</option>
@@ -594,6 +899,7 @@
           <option value="low">Low</option>
           <option value="unknown">Unknown</option>
         </select>
+
         <button id="webResetFilters">Reset filters</button>
       </div>
 
@@ -617,12 +923,12 @@
           <tbody id="webTableBody"></tbody>
         </table>
       </div>
-      <div class="footer-note">Daily web honeypot log entries.</div>
+      <div class="footer-note">Interactive web honeypot log entries.</div>
     </section>
 
     <div class="section-title" id="mail-honeypot">
       <h2>Mail Honeypot</h2>
-      <span class="muted">Powered by <code>mail_summary.json</code></span>
+      <span class="muted">Captured SMTP sessions, senders, recipients and raw message payloads</span>
     </div>
 
     <section class="stats">
@@ -692,6 +998,10 @@
 
     <section class="panel">
       <h3>Mailbox view</h3>
+      <p class="panel-sub">
+        Explore captured email metadata and view the raw honeypot payload.
+      </p>
+
       <div class="filters">
         <input id="mailFilterIp" placeholder="Filter source IP">
         <input id="mailFilterFrom" placeholder="Filter MAIL FROM">
@@ -699,6 +1009,7 @@
         <input id="mailFilterSubject" placeholder="Filter subject">
         <input id="mailFilterBody" placeholder="Filter mail text">
       </div>
+
       <div class="filters" style="grid-template-columns: 1fr 1fr;">
         <select id="mailFilterAuth">
           <option value="">All mails</option>
@@ -721,7 +1032,10 @@
   <script>
     const WEB_DATA_FILE = './eve_inbound.json';
     const MAIL_DATA_FILE = './mail_summary.json';
+
     const charts = [];
+    let attackMapInstance = null;
+
     let webEvents = [];
     let filteredWebEvents = [];
     let mailMessages = [];
@@ -754,14 +1068,14 @@
       return [...m.entries()].sort((a,b) => b[1] - a[1]);
     }
 
-    function topN(arr, n=10) {
+    function topN(arr, n = 10) {
       return arr.slice(0, n);
     }
 
     function riskLabel(score) {
-      if (score === undefined || score === null) return 'unknown';
-      if (score >= 80) return 'high';
-      if (score >= 30) return 'medium';
+      if (score === undefined || score === null || score === '') return 'unknown';
+      if (Number(score) >= 80) return 'high';
+      if (Number(score) >= 30) return 'medium';
       return 'low';
     }
 
@@ -780,13 +1094,58 @@
         .replaceAll('>', '&gt;');
     }
 
-    function truncateText(value, max=60) {
+    function truncateText(value, max = 60) {
       const s = String(value ?? '');
       return s.length > max ? s.slice(0, max - 1) + '…' : s;
     }
 
     function destroyCharts() {
-      while (charts.length) charts.pop().destroy();
+      while (charts.length) {
+        const chart = charts.pop();
+        if (chart) chart.destroy();
+      }
+    }
+
+    function renderOrUpdateMap(events) {
+      const el = document.getElementById('attackMap');
+      if (!el) return;
+
+      const countryCounts = {};
+      for (const e of events) {
+        const code = String(e.country_code || '').toUpperCase().trim();
+        if (!code) continue;
+        countryCounts[code] = (countryCounts[code] || 0) + 1;
+      }
+
+      el.innerHTML = '';
+
+      attackMapInstance = new jsVectorMap({
+        selector: '#attackMap',
+        map: 'world',
+        zoomButtons: true,
+        backgroundColor: 'transparent',
+        regionStyle: {
+          initial: {
+            fill: '#1c2940',
+            stroke: '#31445f',
+            strokeWidth: 1
+          },
+          hover: {
+            fill: '#2b4a70'
+          }
+        },
+        series: {
+          regions: [{
+            values: countryCounts,
+            scale: ['#16345e', '#1d4ed8', '#06b6d4', '#5eead4'],
+            normalizeFunction: 'polynomial'
+          }]
+        },
+        onRegionTooltipShow(event, tooltip, code) {
+          const count = countryCounts[code] || 0;
+          tooltip.text(`${code} • ${count} event${count === 1 ? '' : 's'}`);
+        }
+      });
     }
 
     function makeChart(id, type, labels, values, label) {
@@ -794,7 +1153,14 @@
         type,
         data: {
           labels,
-          datasets: [{ label, data: values }]
+          datasets: [{
+            label,
+            data: values,
+            borderWidth: 2,
+            borderRadius: type === 'bar' ? 8 : 0,
+            tension: 0.32,
+            fill: type === 'line'
+          }]
         },
         options: {
           maintainAspectRatio: false,
@@ -807,6 +1173,7 @@
               grid: { color: 'rgba(255,255,255,.06)' }
             },
             y: {
+              beginAtZero: true,
               ticks: { color: '#c8d5e7' },
               grid: { color: 'rgba(255,255,255,.06)' }
             }
@@ -816,9 +1183,10 @@
       charts.push(c);
     }
 
-    function renderGroupedList(containerId, items, metaText) {
+    function renderGroupedList(containerId, items, metaText, onClick) {
       const el = document.getElementById(containerId);
       el.innerHTML = '';
+
       if (!items.length) {
         el.innerHTML = '<div class="muted">No data available</div>';
         return;
@@ -826,7 +1194,7 @@
 
       for (const [name, count] of items) {
         const row = document.createElement('div');
-        row.className = 'list-item';
+        row.className = 'list-item' + (onClick ? ' clickable' : '');
         row.innerHTML = `
           <div>
             <div class="name">${escapeHtml(name)}</div>
@@ -834,6 +1202,7 @@
           </div>
           <div class="count">${count}</div>
         `;
+        if (onClick) row.addEventListener('click', () => onClick(name));
         el.appendChild(row);
       }
     }
@@ -878,6 +1247,7 @@
         const parsed = parseMail(msg.message_raw || '');
         const rcpt = Array.isArray(msg.rcpt_to) ? msg.rcpt_to : [];
         const auth = msg.auth && (msg.auth.mechanism || msg.auth.username || msg.auth.password) ? msg.auth : null;
+
         return {
           id: idx,
           timestamp: msg.timestamp || '',
@@ -898,6 +1268,11 @@
       }).sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)));
     }
 
+    function setHeroRefresh() {
+      const heroRefreshEl = document.getElementById('heroRefreshChip');
+      if (heroRefreshEl) heroRefreshEl.textContent = `Last update: ${nowLabel()}`;
+    }
+
     function setWebSummary(events) {
       document.getElementById('webTotalEvents').textContent = events.length;
       document.getElementById('webUniqueIps').textContent = new Set(events.map(e => e.src_ip).filter(Boolean)).size;
@@ -910,8 +1285,76 @@
       document.getElementById('mailTotalMails').textContent = messages.length;
       document.getElementById('mailUniqueIps').textContent = new Set(messages.map(m => m.src_ip).filter(Boolean)).size;
       document.getElementById('mailTopSender').textContent = truncateText(countBy(messages, m => m.mail_from)[0]?.[0] || '-', 22);
-      document.getElementById('mailTopRecipient').textContent = truncateText(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r)[0]?.[0] || '-', 22);
+      document.getElementById('mailTopRecipient').textContent =
+        truncateText(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r)[0]?.[0] || '-', 22);
       document.getElementById('mailAuthAttempts').textContent = messages.filter(m => !!m.auth).length;
+    }
+
+    function renderThreatSpotlight(events) {
+      const topIp = countBy(events, e => e.src_ip)[0];
+      const topUrl = countBy(events, e => e.url)[0];
+
+      const highRisk = events
+        .filter(e => Number(e.score) >= 80 && e.signature)
+        .sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
+
+      const mostDangerousSig = highRisk[0]?.signature || countBy(events, e => e.signature)[0]?.[0] || '-';
+
+      document.getElementById('spotlightIp').textContent = topIp?.[0] || '-';
+      document.getElementById('spotlightIpSub').textContent =
+        topIp ? `Observed ${topIp[1]} times in the current dataset.` : 'No data available yet.';
+
+      document.getElementById('spotlightUrl').textContent = truncateText(topUrl?.[0] || '-', 40);
+      document.getElementById('spotlightUrlSub').textContent =
+        topUrl ? `Targeted ${topUrl[1]} times by incoming traffic.` : 'No data available yet.';
+
+      document.getElementById('spotlightSignature').textContent = truncateText(mostDangerousSig, 42);
+      document.getElementById('spotlightSignatureSub').textContent =
+        highRisk[0]
+          ? `Highest observed score: ${highRisk[0].score} from ${highRisk[0].src_ip || 'unknown IP'}.`
+          : 'No high-risk signature detected in the current dataset.';
+    }
+
+    function renderCriticalFeed(events) {
+      const el = document.getElementById('criticalWebFeed');
+      el.innerHTML = '';
+
+      const critical = events
+        .filter(e => Number(e.score) >= 80)
+        .sort((a, b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')))
+        .slice(0, 8);
+
+      if (!critical.length) {
+        el.innerHTML = '<div class="muted">No critical events in the current dataset.</div>';
+        return;
+      }
+
+      critical.forEach(event => {
+        const row = document.createElement('div');
+        row.className = 'critical-item';
+        row.innerHTML = `
+          <div class="critical-top">
+            <div class="critical-title">${escapeHtml(truncateText(event.signature || 'Unknown signature', 80))}</div>
+            <span class="tag ${riskClass(event.score)}">score ${escapeHtml(event.score ?? '-')}</span>
+          </div>
+          <div class="critical-meta">
+            ${escapeHtml(event.timestamp || '-')} · ${escapeHtml(event.src_ip || '-')} · ${escapeHtml(event.country || 'Unknown country')}
+          </div>
+          <div class="critical-row">
+            ${event.url ? `<span class="tag">${escapeHtml(truncateText(event.url, 42))}</span>` : ''}
+            ${event.app_proto ? `<span class="tag">${escapeHtml(event.app_proto)}</span>` : ''}
+            ${event.dest_port ? `<span class="tag">port ${escapeHtml(event.dest_port)}</span>` : ''}
+          </div>
+        `;
+
+        row.addEventListener('click', () => {
+          document.getElementById('webFilterIp').value = event.src_ip || '';
+          applyWebFilters();
+          document.getElementById('web-honeypot').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        el.appendChild(row);
+      });
     }
 
     function renderWebCharts(events) {
@@ -920,11 +1363,14 @@
       const urls = topN(countBy(events, e => e.url), 10);
       const uas = topN(countBy(events, e => e.user_agent), 10);
       const ips = topN(countBy(events, e => e.src_ip), 10);
+      const ports = topN(countBy(events, e => String(e.dest_port ?? '')), 10);
+
       const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, '0'), 0]);
       const hourMap = new Map(hourly);
+
       for (const e of events) {
         if (!e.timestamp) continue;
-        const h = e.timestamp.slice(11, 13);
+        const h = String(e.timestamp).slice(11, 13);
         if (hourMap.has(h)) hourMap.set(h, hourMap.get(h) + 1);
       }
 
@@ -934,17 +1380,20 @@
       makeChart('webUrlChart', 'bar', urls.map(x => truncateText(x[0], 28)), urls.map(x => x[1]), 'Events');
       makeChart('webUaChart', 'bar', uas.map(x => truncateText(x[0], 28)), uas.map(x => x[1]), 'Events');
       makeChart('webIpChart', 'bar', ips.map(x => x[0]), ips.map(x => x[1]), 'Events');
+      makeChart('webPortChart', 'bar', ports.map(x => x[0]), ports.map(x => x[1]), 'Events');
     }
 
     function renderMailCharts(messages) {
       const ips = topN(countBy(messages, m => m.src_ip), 10);
       const senders = topN(countBy(messages, m => m.mail_from), 10);
       const recipients = topN(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r), 10);
+
       const hourly = Array.from({ length: 24 }, (_, i) => [String(i).padStart(2, '0'), 0]);
       const hourMap = new Map(hourly);
+
       for (const m of messages) {
         if (!m.timestamp) continue;
-        const h = m.timestamp.slice(11, 13);
+        const h = String(m.timestamp).slice(11, 13);
         if (hourMap.has(h)) hourMap.set(h, hourMap.get(h) + 1);
       }
 
@@ -954,37 +1403,83 @@
       makeChart('mailRecipientChart', 'bar', recipients.map(x => truncateText(x[0], 24)), recipients.map(x => x[1]), 'Mails');
     }
 
+    function setWebFilterAndApply(fieldId, value) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.value = value || '';
+      applyWebFilters();
+    }
+
+    function setMailFilterAndApply(fieldId, value) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.value = value || '';
+      applyMailFilters();
+    }
+
     function renderWebLists(events) {
-      renderGroupedList('webCountryList', topN(countBy(events, e => e.country), 20), 'Observed country in the dataset');
-      renderGroupedList('webSignatureList', topN(countBy(events, e => e.signature), 20), 'Observed signature in the dataset');
-      renderGroupedList('webIpList', topN(countBy(events, e => e.src_ip), 20), 'Observed source IP in the dataset');
+      renderGroupedList('webCountryList', topN(countBy(events, e => e.country), 20), 'Click to filter by country', (name) => {
+        setWebFilterAndApply('webFilterCountry', name);
+      });
+
+      renderGroupedList('webSignatureList', topN(countBy(events, e => e.signature), 20), 'Click to filter by signature', (name) => {
+        setWebFilterAndApply('webFilterSignature', name);
+      });
+
+      renderGroupedList('webIpList', topN(countBy(events, e => e.src_ip), 20), 'Click to filter by source IP', (name) => {
+        setWebFilterAndApply('webFilterIp', name);
+      });
     }
 
     function renderMailLists(messages) {
-      renderGroupedList('mailIpList', topN(countBy(messages, m => m.src_ip), 20), 'Observed source IP in the dataset');
-      renderGroupedList('mailSenderList', topN(countBy(messages, m => m.mail_from), 20), 'Observed MAIL FROM in the dataset');
-      renderGroupedList('mailRecipientList', topN(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r), 20), 'Observed RCPT TO in the dataset');
+      renderGroupedList('mailIpList', topN(countBy(messages, m => m.src_ip), 20), 'Click to filter by source IP', (name) => {
+        setMailFilterAndApply('mailFilterIp', name);
+      });
+
+      renderGroupedList('mailSenderList', topN(countBy(messages, m => m.mail_from), 20), 'Click to filter by MAIL FROM', (name) => {
+        setMailFilterAndApply('mailFilterFrom', name);
+      });
+
+      renderGroupedList('mailRecipientList', topN(countBy(messages.flatMap(m => m.rcpt_to.map(r => ({ r }))), x => x.r), 20), 'Click to filter by RCPT TO', (name) => {
+        setMailFilterAndApply('mailFilterTo', name);
+      });
     }
 
     function renderWebTable(events) {
       const tbody = document.getElementById('webTableBody');
       tbody.innerHTML = '';
+
       for (const e of events) {
         const risk = riskLabel(e.score);
         const tr = document.createElement('tr');
+
         tr.innerHTML = `
           <td>${escapeHtml(e.timestamp || '')}</td>
-          <td>${escapeHtml(e.src_ip || '')}</td>
-          <td>${escapeHtml(e.country || '')} ${e.country_code ? `<span class="tag">${escapeHtml(e.country_code)}</span>` : ''}</td>
+          <td><span class="tag clickable" data-filter="ip">${escapeHtml(e.src_ip || '')}</span></td>
+          <td>
+            <span class="tag clickable" data-filter="country">${escapeHtml(e.country || '')}</span>
+            ${e.country_code ? `<span class="tag">${escapeHtml(e.country_code)}</span>` : ''}
+          </td>
           <td>${escapeHtml(e.dest_port ?? '')}</td>
           <td>${escapeHtml(e.app_proto || '')}</td>
-          <td>${escapeHtml(e.url || '')}</td>
-          <td>${escapeHtml(e.signature || '')}</td>
-          <td>${escapeHtml(e.user_agent || '')}</td>
+          <td><span class="tag clickable" data-filter="url">${escapeHtml(truncateText(e.url || '', 46))}</span></td>
+          <td><span class="tag clickable" data-filter="signature">${escapeHtml(truncateText(e.signature || '', 54))}</span></td>
+          <td>${escapeHtml(truncateText(e.user_agent || '', 58))}</td>
           <td>${escapeHtml(e.score ?? '')}</td>
           <td>${escapeHtml(e.reports ?? '')}</td>
           <td><span class="tag ${riskClass(e.score)}">${risk}</span></td>
         `;
+
+        const ipEl = tr.querySelector('[data-filter="ip"]');
+        const countryEl = tr.querySelector('[data-filter="country"]');
+        const urlEl = tr.querySelector('[data-filter="url"]');
+        const sigEl = tr.querySelector('[data-filter="signature"]');
+
+        if (ipEl) ipEl.addEventListener('click', () => setWebFilterAndApply('webFilterIp', e.src_ip || ''));
+        if (countryEl) countryEl.addEventListener('click', () => setWebFilterAndApply('webFilterCountry', e.country || ''));
+        if (urlEl) urlEl.addEventListener('click', () => setWebFilterAndApply('webFilterUrl', e.url || ''));
+        if (sigEl) sigEl.addEventListener('click', () => setWebFilterAndApply('webFilterSignature', e.signature || ''));
+
         tbody.appendChild(tr);
       }
     }
@@ -993,6 +1488,7 @@
       const select = document.getElementById('webFilterProto');
       const values = [...new Set(events.map(e => e.app_proto).filter(Boolean))].sort();
       select.innerHTML = '<option value="">All protocols</option>';
+
       for (const v of values) {
         const o = document.createElement('option');
         o.value = v;
@@ -1039,6 +1535,7 @@
       messages.forEach((msg, index) => {
         const item = document.createElement('div');
         item.className = 'mail-item' + (index === selectedMailIndex ? ' active' : '');
+
         item.innerHTML = `
           <div class="mail-top">
             <div class="mail-subject">${escapeHtml(msg.subject)}</div>
@@ -1049,11 +1546,13 @@
           <div class="mail-ip">TO ${escapeHtml(msg.rcpt_to.join(', ') || '-')}</div>
           <div class="mail-snippet">${escapeHtml(msg.snippet || '(empty body)')}</div>
         `;
+
         item.addEventListener('click', () => {
           selectedMailIndex = index;
           renderMailList(filteredMailMessages);
           renderMailView(filteredMailMessages[selectedMailIndex]);
         });
+
         list.appendChild(item);
       });
 
@@ -1062,6 +1561,7 @@
 
     function renderMailView(msg) {
       const view = document.getElementById('mailView');
+
       if (!msg) {
         view.innerHTML = '<div class="empty-state">Select an email to view the full captured content.</div>';
         return;
@@ -1081,6 +1581,7 @@
           <span class="dot yellow"></span>
           <span class="dot green"></span>
         </div>
+
         <div class="mail-header">
           <h3>${escapeHtml(msg.subject)}</h3>
           <div class="header-grid">
@@ -1109,10 +1610,12 @@
             <div class="header-value">${escapeHtml(msg.date_header || '-')}</div>
           </div>
         </div>
+
         <div class="mail-toolbar">
           <span class="tool-chip">Captured email</span>
           ${authChips}
         </div>
+
         <div class="mail-body-wrap">
           <div class="mail-raw-meta">
             This view combines SMTP metadata and the raw message captured by the honeypot.
@@ -1150,11 +1653,22 @@
     }
 
     function initWebFilters() {
-      const ids = ['webFilterIp', 'webFilterCountry', 'webFilterSignature', 'webFilterUrl', 'webFilterUa', 'webFilterProto', 'webFilterRisk'];
+      const ids = [
+        'webFilterIp',
+        'webFilterCountry',
+        'webFilterSignature',
+        'webFilterUrl',
+        'webFilterUa',
+        'webFilterProto',
+        'webFilterRisk'
+      ];
+
       ids.forEach(id => {
-        document.getElementById(id).addEventListener('input', applyWebFilters);
-        document.getElementById(id).addEventListener('change', applyWebFilters);
+        const el = document.getElementById(id);
+        el.addEventListener('input', applyWebFilters);
+        el.addEventListener('change', applyWebFilters);
       });
+
       document.getElementById('webResetFilters').addEventListener('click', () => {
         ids.forEach(id => document.getElementById(id).value = '');
         filteredWebEvents = [...webEvents];
@@ -1163,11 +1677,21 @@
     }
 
     function initMailFilters() {
-      const ids = ['mailFilterIp', 'mailFilterFrom', 'mailFilterTo', 'mailFilterSubject', 'mailFilterBody', 'mailFilterAuth'];
+      const ids = [
+        'mailFilterIp',
+        'mailFilterFrom',
+        'mailFilterTo',
+        'mailFilterSubject',
+        'mailFilterBody',
+        'mailFilterAuth'
+      ];
+
       ids.forEach(id => {
-        document.getElementById(id).addEventListener('input', applyMailFilters);
-        document.getElementById(id).addEventListener('change', applyMailFilters);
+        const el = document.getElementById(id);
+        el.addEventListener('input', applyMailFilters);
+        el.addEventListener('change', applyMailFilters);
       });
+
       document.getElementById('mailResetFilters').addEventListener('click', () => {
         ids.forEach(id => document.getElementById(id).value = '');
         filteredMailMessages = [...mailMessages];
@@ -1187,24 +1711,35 @@
 
       webEvents = parseJsonLines(webText).sort((a, b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
       filteredWebEvents = [...webEvents];
+
       mailMessages = normalizeMailMessages(mailJson);
       filteredMailMessages = [...mailMessages];
 
       destroyCharts();
+
+      setHeroRefresh();
       setWebSummary(webEvents);
       setMailSummary(mailMessages);
+
       fillWebProtoFilter(webEvents);
+
+      renderThreatSpotlight(webEvents);
+      renderCriticalFeed(webEvents);
+      renderOrUpdateMap(webEvents);
+
       renderWebCharts(webEvents);
       renderMailCharts(mailMessages);
+
       renderWebLists(webEvents);
       renderMailLists(mailMessages);
+
       renderWebTable(webEvents);
       renderMailList(mailMessages);
-      document.getElementById('lastRefresh').textContent = nowLabel();
     }
 
     initWebFilters();
     initMailFilters();
+
     loadData().catch(err => {
       document.body.insertAdjacentHTML(
         'beforeend',
