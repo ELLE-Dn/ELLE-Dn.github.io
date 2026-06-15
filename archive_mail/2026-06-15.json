@@ -1,0 +1,38 @@
+{
+  "total_messages": 3,
+  "messages": [
+    {
+      "timestamp": "2026-06-14T00:38:47.196090+00:00",
+      "src_ip": "62.60.130.183",
+      "helo": "[62.60.130.183]",
+      "mail_from": "ouchi@icaminc.co.jp> size=83",
+      "rcpt_to": [
+        "ijabilu@dapp-malawi.org"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Email Tester !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    },
+    {
+      "timestamp": "2026-06-14T00:57:44.450511+00:00",
+      "src_ip": "64.89.161.172",
+      "helo": "[64.89.161.172]",
+      "mail_from": "info@sample.com> size=81",
+      "rcpt_to": [
+        "johndocument1@outlook.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    },
+    {
+      "timestamp": "2026-06-14T20:59:13.497077+00:00",
+      "src_ip": "185.169.4.11",
+      "helo": "WIN-CLJ1B0GQ6JP",
+      "mail_from": "spameri@tiscali.it",
+      "rcpt_to": [
+        "spameri@tiscali.it"
+      ],
+      "auth": null,
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Sun, 14 Jun 2026 13:59:12 -0700\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    }
+  ]
+}
