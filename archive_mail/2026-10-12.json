@@ -1,0 +1,16 @@
+{
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-10-12T19:55:24.585720+00:00",
+      "src_ip": "31.56.19.20",
+      "helo": "[31.56.19.20]",
+      "mail_from": "dpr@priv8shop.com> size=83",
+      "rcpt_to": [
+        "barr.ericorji1960@yahoo.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Email Tester !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    }
+  ]
+}
