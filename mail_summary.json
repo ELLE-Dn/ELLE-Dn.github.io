@@ -1,4 +1,38 @@
 {
-  "total_messages": 0,
-  "messages": []
+  "total_messages": 3,
+  "messages": [
+    {
+      "timestamp": "2026-10-15T05:04:25.089184+00:00",
+      "src_ip": "23.132.164.27",
+      "helo": "SRV-B8A674C3.incognion.com",
+      "mail_from": "it@linux.com> size=353",
+      "rcpt_to": [
+        "it@vdeassetmanagement.co.uk"
+      ],
+      "auth": null,
+      "message_raw": "Content-Type: text/plain; charset=\"utf-8\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: base64\nSubject: SMTP Test 3DUD9O3V0C\nFrom: it@linux.com\nTo: it@vdeassetmanagement.co.uk\n\nU01UUCBIb3N0OiA5Mi40LjE2My40OSDwn4+iClNNVFAgUG9ydDogMjUg4pqZ77iPClNNVFAgRnJv\nbTogaXRAbGludXguY29tIPCfk6cKVGVzdCBFbWFpbCBkZWxpdmVyZWQhIOKchQpNYXJrZXI6IDNE\nVUQ5TzNWMEM="
+    },
+    {
+      "timestamp": "2026-10-15T07:33:30.445090+00:00",
+      "src_ip": "178.16.54.144",
+      "helo": "ehlo-49683.service",
+      "mail_from": "record@userecord.com> BODY=8BITMIME",
+      "rcpt_to": [
+        "info@ctalab.net"
+      ],
+      "auth": null,
+      "message_raw": "From: Record <record@userecord.com>\nTo: info@ctalab.net\nSubject: Automated Notice NEW SCRIPT [PLAIN] TDVXVK 91209\nMIME-Version: 1.0\nContent-Type: multipart/alternative; boundary=\"boundary123\"\n\n--boundary123\nContent-Type: text/plain; charset=\"utf-8\"\n\nAutomated Notice NEW SCRIPT [PLAIN]\n\nSMTP: 92.4.163.49:25 NoDomain NoPTR\nConnection Way: PLAIN\nYour service is up and running without issues.\nReference Code: TDVXVK\n--boundary123\nContent-Type: text/html; charset=\"utf-8\"\n\n<html>\n<body>\n<h2>Automated Notice NEW SCRIPT [PLAIN]</h2>\n<p><b>SMTP:</b> 92.4.163.49:25 NoDomain NoPTR</p>\n<p><b>Connection Way:</b> PLAIN</p>\n<p>Your service is up and running without issues.</p>\n<p><b>Reference Code:</b> TDVXVK</p>\n</body>\n</html>\n--boundary123--"
+    },
+    {
+      "timestamp": "2026-10-15T08:21:13.294138+00:00",
+      "src_ip": "196.251.121.193",
+      "helo": "[196.251.121.193]",
+      "mail_from": "info@sample.com> size=81",
+      "rcpt_to": [
+        "m1k3127@yandex.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    }
+  ]
 }
