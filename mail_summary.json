@@ -1,16 +1,29 @@
 {
-  "total_messages": 1,
+  "total_messages": 2,
   "messages": [
     {
-      "timestamp": "2026-10-16T08:58:32.070957+00:00",
-      "src_ip": "31.56.19.64",
-      "helo": "[31.56.19.64]",
-      "mail_from": "info@sample.com> size=81",
+      "timestamp": "2026-10-17T01:25:17.504300+00:00",
+      "src_ip": "62.60.130.238",
+      "helo": "D-552",
+      "mail_from": "test@example.com",
       "rcpt_to": [
-        "Brucebantrootdeskfiles5050@outlook.com"
+        "m41lt35ter@outlook.com",
+        "webmail663@gmail.com"
       ],
       "auth": null,
-      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+      "message_raw": "From: test@example.com\nTo: webmail663@gmail.com\nSubject: NoAuth 92.4.163.49\n\nServer: 92.4.163.49:25 - test"
+    },
+    {
+      "timestamp": "2026-10-17T07:47:52.826343+00:00",
+      "src_ip": "62.60.130.238",
+      "helo": "D-552",
+      "mail_from": "test@example.com",
+      "rcpt_to": [
+        "m41lt35ter@outlook.com",
+        "webmail663@gmail.com"
+      ],
+      "auth": null,
+      "message_raw": "From: test@example.com\nTo: webmail663@gmail.com\nSubject: NoAuth 92.4.163.49\n\nServer: 92.4.163.49:25 - postmaster"
     }
   ]
 }
