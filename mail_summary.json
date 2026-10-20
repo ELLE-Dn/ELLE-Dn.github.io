@@ -1,4 +1,16 @@
 {
-  "total_messages": 0,
-  "messages": []
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-10-20T19:37:08.043175+00:00",
+      "src_ip": "91.92.41.82",
+      "helo": "test.com",
+      "mail_from": "test@test.com",
+      "rcpt_to": [
+        "verify@test.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Open Relay Test\n\nThis is a test."
+    }
+  ]
 }
