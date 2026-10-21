@@ -1,0 +1,28 @@
+{
+  "total_messages": 2,
+  "messages": [
+    {
+      "timestamp": "2026-10-21T06:01:35.259274+00:00",
+      "src_ip": "62.60.130.234",
+      "helo": "host-440",
+      "mail_from": "test@example.com",
+      "rcpt_to": [
+        "m41lt35ter@outlook.com",
+        "wemail663@gmail.com"
+      ],
+      "auth": null,
+      "message_raw": "From: test@example.com\nTo: wemail663@gmail.com\nSubject: NoAuth 92.4.163.49\n\nServer: 92.4.163.49:25 - test"
+    },
+    {
+      "timestamp": "2026-10-21T22:49:00.408701+00:00",
+      "src_ip": "91.92.41.82",
+      "helo": "test.com",
+      "mail_from": "admin@mx.example",
+      "rcpt_to": [
+        "benventures4@gmail.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Open Relay Test - 92.4.163.49\n\nThis is a test email sent through open relay: 92.4.163.49\nSender: admin@mx.example\nRecipient: benventures4@gmail.com\nTime: 2026-10-21 23:49:00\nBanner: 220 mx.example ESMTP ready\n\nDomain: mx.example\n"
+    }
+  ]
+}
