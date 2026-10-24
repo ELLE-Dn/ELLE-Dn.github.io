@@ -1,96 +1,16 @@
 {
-  "total_messages": 8,
+  "total_messages": 1,
   "messages": [
     {
-      "timestamp": "2026-10-23T11:17:26.595114+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
+      "timestamp": "2026-10-24T21:08:00.206460+00:00",
+      "src_ip": "196.251.121.193",
+      "helo": "[196.251.121.193]",
+      "mail_from": "info@sample.com> size=81",
       "rcpt_to": [
-        "benventures4@gmail.com"
+        "m1k3127@yandex.com"
       ],
       "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============5479758102949392191==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures4@gmail.com\nSubject: SMTP Test from 92.4.163.49\n\n--===============5479758102949392191==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures4@gmail.com\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 12:17:26\n            \n--===============5479758102949392191==--"
-    },
-    {
-      "timestamp": "2026-10-23T11:17:27.623634+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures4@gmail.com"
-      ],
-      "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============7867575263766000498==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures4@gmail.com\nSubject: SMTP Test from 92.4.163.49\n\n--===============7867575263766000498==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures4@gmail.com\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 12:17:27\n            \n--===============7867575263766000498==--"
-    },
-    {
-      "timestamp": "2026-10-23T11:19:40.825278+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures4@gmail.com"
-      ],
-      "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============4661833592429182568==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures4@gmail.com\nSubject: SMTP Test from 92.4.163.49\n\n--===============4661833592429182568==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures4@gmail.com\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 12:19:40\n            \n--===============4661833592429182568==--"
-    },
-    {
-      "timestamp": "2026-10-23T15:05:01.816885+00:00",
-      "src_ip": "91.92.241.9",
-      "helo": "User",
-      "mail_from": "contact@office.vn",
-      "rcpt_to": [
-        "adamhd093@hotmail.com",
-        "barclaysnkukb@hotmail.com",
-        "brendan.thomas_austracceo@yahoo.com",
-        "philiplunetta_associate27@aol.com"
-      ],
-      "auth": null,
-      "message_raw": "Reply-To: <twman432t@proton.me>\nFrom: \"Mr. Tom Williams\"<contact@office.vn>\nSubject: Kindly Reply My Message  92.4.163.49\nDate: Fri, 23 Oct 2026 03:08:49 -0700\nMIME-Version: 1.0\nContent-Type: text/plain;\n\tcharset=\"Windows-1251\"\nContent-Transfer-Encoding: 7bit\nX-Priority: 3\nX-MSMail-Priority: Normal\nX-Mailer: Microsoft Outlook Express 6.00.2600.0000\nX-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000\n\nAttn: My Dear,\n\nI am Tom Williams,I was the Financial Consultant to Late Jose Frank Donald who died in a Car Accident Last Year June 2025 at Edingburg Expess Road,before his death Late Jose Frank Donald deposited USD$12.800.000.00 Million with our Bank here in London-UK Since then several efforts to locate his relatives/family had been unsuccessful. I'm contacting you to Help receive USD$12.800.000.00 Million from the Bank here in London into your Bank Account as the Relation/Next of Kin to Late Jose Frank Donald before the Bank divert the Funds as unclaimed Cash.\n\nAll I need is your honest cooperation to enable us succeed in this Transaction,I assure you NO Risk and will be successful without any problem.\n\nIf you are interested furnish me with the following details:\n\nFull Name:\nAddress:\nTelephone numbers:\nOccupation:\nAge:\nYou will take 60% of the total Funds receive into your Account and 40% for me.\n\nBest regards,\n\nMr.Tom Williams.\nFinancial Consultant.\nE-mail: linkme2wilt441@outlook.com"
-    },
-    {
-      "timestamp": "2026-10-23T20:11:48.988594+00:00",
-      "src_ip": "172.96.181.191",
-      "helo": "[172.96.181.191]",
-      "mail_from": "dpr@priv8shop.com> size=83",
-      "rcpt_to": [
-        "kingebonic2019@yahoo.com"
-      ],
-      "auth": null,
-      "message_raw": "Subject: Email Tester !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
-    },
-    {
-      "timestamp": "2026-10-23T22:14:01.866294+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures5@atomicmail.io"
-      ],
-      "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============2437163659592379240==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures5@atomicmail.io\nSubject: SMTP Test from 92.4.163.49\n\n--===============2437163659592379240==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures5@atomicmail.io\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 23:14:01\n            \n--===============2437163659592379240==--"
-    },
-    {
-      "timestamp": "2026-10-23T22:14:02.592420+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures5@atomicmail.io"
-      ],
-      "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============5749126326619953951==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures5@atomicmail.io\nSubject: SMTP Test from 92.4.163.49\n\n--===============5749126326619953951==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures5@atomicmail.io\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 23:14:02\n            \n--===============5749126326619953951==--"
-    },
-    {
-      "timestamp": "2026-10-23T22:15:16.594821+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "[91.92.41.82]",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures5@atomicmail.io"
-      ],
-      "auth": null,
-      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============5759424618059412232==\"\nMIME-Version: 1.0\nFrom: admin@mx.example\nTo: benventures5@atomicmail.io\nSubject: SMTP Test from 92.4.163.49\n\n--===============5759424618059412232==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n\n            SMTP Relay Test\n            Server: 92.4.163.49:25\n            Sender: admin@mx.example\n            Recipient: benventures5@atomicmail.io\n            Banner: mx.example ESMTP ready\nPIPELINING\n8BITMIME\nSIZE 10485760\nAUTH LOGIN PLAIN\n            Domain: mx.example\n            Time: 2026-10-23 23:15:16\n            \n--===============5759424618059412232==--"
+      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
     }
   ]
 }

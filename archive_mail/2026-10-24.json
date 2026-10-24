@@ -1,0 +1,16 @@
+{
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-10-24T21:08:00.206460+00:00",
+      "src_ip": "196.251.121.193",
+      "helo": "[196.251.121.193]",
+      "mail_from": "info@sample.com> size=81",
+      "rcpt_to": [
+        "m1k3127@yandex.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    }
+  ]
+}
