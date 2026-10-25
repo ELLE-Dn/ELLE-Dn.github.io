@@ -1,16 +1,27 @@
 {
-  "total_messages": 1,
+  "total_messages": 2,
   "messages": [
     {
-      "timestamp": "2026-10-24T21:08:00.206460+00:00",
-      "src_ip": "196.251.121.193",
-      "helo": "[196.251.121.193]",
-      "mail_from": "info@sample.com> size=81",
+      "timestamp": "2026-10-25T12:49:30.998146+00:00",
+      "src_ip": "91.92.242.133",
+      "helo": "91-92-242-133",
+      "mail_from": "spameri@tiscali.it",
       "rcpt_to": [
-        "m1k3127@yandex.com"
+        "spameri@tiscali.it"
       ],
       "auth": null,
-      "message_raw": "Subject: VALID SMTP !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Sun, 25 Oct 2026 10:38:00 -0700\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    },
+    {
+      "timestamp": "2026-10-25T17:55:26.711359+00:00",
+      "src_ip": "91.92.41.82",
+      "helo": "test.com",
+      "mail_from": "admin@mx.example",
+      "rcpt_to": [
+        "benventures5@atomicmail.io"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Open Relay Test - 92.4.163.49\n\nThis is a test email sent through open relay: 92.4.163.49\nSender: admin@mx.example\nRecipient: benventures5@atomicmail.io\nTime: 2026-10-25 17:55:26\nBanner: 220 mx.example ESMTP ready\n\nDomain: mx.example\n"
     }
   ]
 }
