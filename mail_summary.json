@@ -1,27 +1,4 @@
 {
-  "total_messages": 2,
-  "messages": [
-    {
-      "timestamp": "2026-10-25T12:49:30.998146+00:00",
-      "src_ip": "91.92.242.133",
-      "helo": "91-92-242-133",
-      "mail_from": "spameri@tiscali.it",
-      "rcpt_to": [
-        "spameri@tiscali.it"
-      ],
-      "auth": null,
-      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Sun, 25 Oct 2026 10:38:00 -0700\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
-    },
-    {
-      "timestamp": "2026-10-25T17:55:26.711359+00:00",
-      "src_ip": "91.92.41.82",
-      "helo": "test.com",
-      "mail_from": "admin@mx.example",
-      "rcpt_to": [
-        "benventures5@atomicmail.io"
-      ],
-      "auth": null,
-      "message_raw": "Subject: Open Relay Test - 92.4.163.49\n\nThis is a test email sent through open relay: 92.4.163.49\nSender: admin@mx.example\nRecipient: benventures5@atomicmail.io\nTime: 2026-10-25 17:55:26\nBanner: 220 mx.example ESMTP ready\n\nDomain: mx.example\n"
-    }
-  ]
+  "total_messages": 0,
+  "messages": []
 }
