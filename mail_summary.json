@@ -1,5 +1,5 @@
 {
-  "total_messages": 1,
+  "total_messages": 2,
   "messages": [
     {
       "timestamp": "2026-10-28T16:12:58.459459+00:00",
@@ -11,6 +11,17 @@
       ],
       "auth": null,
       "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Wed, 28 Oct 2026 23:12:58 +0700\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    },
+    {
+      "timestamp": "2026-10-29T21:50:58.245305+00:00",
+      "src_ip": "141.98.9.123",
+      "helo": "WIN-CLJ1B0GQ6JP",
+      "mail_from": "spameri@tiscali.it",
+      "rcpt_to": [
+        "spameri@tiscali.it"
+      ],
+      "auth": null,
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Thu, 29 Oct 2026 08:47:41 -0700\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
     }
   ]
 }
