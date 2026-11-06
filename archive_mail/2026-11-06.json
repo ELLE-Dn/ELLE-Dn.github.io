@@ -1,0 +1,16 @@
+{
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-11-06T05:18:40.654550+00:00",
+      "src_ip": "31.57.184.238",
+      "helo": "ehlo-35104.service",
+      "mail_from": "update@useupdate.com> BODY=8BITMIME",
+      "rcpt_to": [
+        "info@ctalab.net"
+      ],
+      "auth": null,
+      "message_raw": "From: Update <update@useupdate.com>\nTo: info@ctalab.net\nSubject: Server Notification NEW SCRIPT [PLAIN] WHAWNG 56665\nMIME-Version: 1.0\nContent-Type: multipart/alternative; boundary=\"boundary123\"\n\n--boundary123\nContent-Type: text/plain; charset=\"utf-8\"\n\nServer Notification NEW SCRIPT [PLAIN]\n\nSMTP: 92.4.163.49:25 NoDomain NoPTR\nConnection Way: PLAIN\nThe connection to your server was established successfully.\nReference Code: WHAWNG\n--boundary123\nContent-Type: text/html; charset=\"utf-8\"\n\n<html>\n<body>\n<h2>Server Notification NEW SCRIPT [PLAIN]</h2>\n<p><b>SMTP:</b> 92.4.163.49:25 NoDomain NoPTR</p>\n<p><b>Connection Way:</b> PLAIN</p>\n<p>The connection to your server was established successfully.</p>\n<p><b>Reference Code:</b> WHAWNG</p>\n</body>\n</html>\n--boundary123--"
+    }
+  ]
+}
