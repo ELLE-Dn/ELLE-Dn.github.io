@@ -1,0 +1,16 @@
+{
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-11-07T18:14:08.506869+00:00",
+      "src_ip": "154.29.76.107",
+      "helo": "ehlo-82749.service",
+      "mail_from": "system@usesystem.com> BODY=8BITMIME",
+      "rcpt_to": [
+        "info@ctalab.net"
+      ],
+      "auth": null,
+      "message_raw": "From: System <system@usesystem.com>\nTo: info@ctalab.net\nSubject: System Health Check NEW SCRIPT [PLAIN] XFYWAZ 62488\nMIME-Version: 1.0\nContent-Type: multipart/alternative; boundary=\"boundary123\"\n\n--boundary123\nContent-Type: text/plain; charset=\"utf-8\"\n\nSystem Health Check NEW SCRIPT [PLAIN]\n\nSMTP: 92.4.163.49:25 NoDomain NoPTR\nConnection Way: PLAIN\nAll systems are operational. This is your automated server notification.\nReference Code: XFYWAZ\n--boundary123\nContent-Type: text/html; charset=\"utf-8\"\n\n<html>\n<body>\n<h2>System Health Check NEW SCRIPT [PLAIN]</h2>\n<p><b>SMTP:</b> 92.4.163.49:25 NoDomain NoPTR</p>\n<p><b>Connection Way:</b> PLAIN</p>\n<p>All systems are operational. This is your automated server notification.</p>\n<p><b>Reference Code:</b> XFYWAZ</p>\n</body>\n</html>\n--boundary123--"
+    }
+  ]
+}
