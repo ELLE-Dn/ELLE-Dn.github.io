@@ -1,16 +1,38 @@
 {
-  "total_messages": 1,
+  "total_messages": 3,
   "messages": [
     {
-      "timestamp": "2026-11-08T03:08:10.618943+00:00",
-      "src_ip": "141.98.9.104",
+      "timestamp": "2026-11-09T17:02:51.027683+00:00",
+      "src_ip": "217.60.76.18",
+      "helo": "[217.60.76.18]",
+      "mail_from": "admin@example",
+      "rcpt_to": [
+        "Altangriffith1974@outlook.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: [SECURITY] Open Relay Verified - example\n\nRelay Status: OPEN\nSource: 92.4.163.49:25\nBanner: b'mx.example ESMTP ready'\nExtracted Domain: example"
+    },
+    {
+      "timestamp": "2026-11-09T17:12:23.226311+00:00",
+      "src_ip": "172.96.181.191",
+      "helo": "[172.96.181.191]",
+      "mail_from": "dpr@priv8shop.com> size=83",
+      "rcpt_to": [
+        "kingebonic2019@yahoo.com"
+      ],
+      "auth": null,
+      "message_raw": "Subject: Email Tester !\n\n('Email delivered from', '92.4.163.49', 'with port', 25)"
+    },
+    {
+      "timestamp": "2026-11-09T18:49:25.668954+00:00",
+      "src_ip": "141.98.9.114",
       "helo": "WIN-CLJ1B0GQ6JP",
       "mail_from": "spameri@tiscali.it",
       "rcpt_to": [
         "spameri@tiscali.it"
       ],
       "auth": null,
-      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Sat, 7 Nov 2026 19:08:10 -0800\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Mon, 9 Nov 2026 10:49:25 -0800\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
     }
   ]
 }
