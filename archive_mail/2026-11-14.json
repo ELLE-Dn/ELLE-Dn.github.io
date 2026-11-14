@@ -1,0 +1,16 @@
+{
+  "total_messages": 1,
+  "messages": [
+    {
+      "timestamp": "2026-11-14T01:58:33.165932+00:00",
+      "src_ip": "31.57.184.238",
+      "helo": "luizkjt.io",
+      "mail_from": "notify@luizkjt.io",
+      "rcpt_to": [
+        "info@ctalab.net"
+      ],
+      "auth": null,
+      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============0547506976729209799==\"\nMIME-Version: 1.0\nFrom: notify@luizkjt.io\nTo: info@ctalab.net\nSubject: [SMTP LIVE] 92.4.163.49:25\n\n--===============0547506976729209799==\nContent-Type: text/plain; charset=\"utf-8\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: base64\n\nU01UUCBTdGF0dXMgTm90aWZpY2F0aW9uCuKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU\ngOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU\ngOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgApTZXJ2ZXIgIDogOTIuNC4xNjMuNDk6MjUK\nRG9tYWluICA6IGx1aXpranQuaW8KU3RhdHVzICA6IExJVkUKQ2hlY2tlZCA6IDIwMjYtMTEtMTMg\nMTc6NTg6MzMK\n\n--===============0547506976729209799==--"
+    }
+  ]
+}
