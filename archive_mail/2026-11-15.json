@@ -1,0 +1,38 @@
+{
+  "total_messages": 3,
+  "messages": [
+    {
+      "timestamp": "2026-11-15T01:27:36.518756+00:00",
+      "src_ip": "45.148.10.5",
+      "helo": "audit.local",
+      "mail_from": "john.smith@post.lu",
+      "rcpt_to": [
+        "frubeppoujeuni-2923@yopmail.com"
+      ],
+      "auth": null,
+      "message_raw": "From: <john.smith@post.lu>\nTo: <frubeppoujeuni-2923@yopmail.com>\nSubject: Direct SMTP Test - 92.4.163.49 (NoAuth External)\nContent-Type: text/plain; charset=UTF-8\n\n=== DIRECT SMTP TEST DELIVERY ===\nTarget IP       : 92.4.163.49\nTarget Port     : 25\nBanner          : mx.example ESMTP ready\nDetected Domain : mx.example\nTLS Active      : false\nAuth Used       : \nMAIL FROM Used  : john.smith@post.lu\nRCPT TO Target  : frubeppoujeuni-2923@yopmail.com\nTimestamp       : Sun, 15 Nov 2026 01:27:36 +0000\n=================================\n"
+    },
+    {
+      "timestamp": "2026-11-15T14:42:06.803402+00:00",
+      "src_ip": "45.148.10.5",
+      "helo": "audit.local",
+      "mail_from": "john.smith@post.lu",
+      "rcpt_to": [
+        "frubeppoujeuni-2923@yopmail.com"
+      ],
+      "auth": null,
+      "message_raw": "From: <john.smith@post.lu>\nTo: <frubeppoujeuni-2923@yopmail.com>\nSubject: Direct SMTP Test - 92.4.163.49 (NoAuth External)\nContent-Type: text/plain; charset=UTF-8\n\n=== DIRECT SMTP TEST DELIVERY ===\nTarget IP       : 92.4.163.49\nTarget Port     : 25\nBanner          : mx.example ESMTP ready\nDetected Domain : mx.example\nTLS Active      : false\nAuth Used       : \nMAIL FROM Used  : john.smith@post.lu\nRCPT TO Target  : frubeppoujeuni-2923@yopmail.com\nTimestamp       : Sun, 15 Nov 2026 14:42:06 +0000\n=================================\n"
+    },
+    {
+      "timestamp": "2026-11-15T14:42:56.811603+00:00",
+      "src_ip": "31.57.184.238",
+      "helo": "pdhiddm.io",
+      "mail_from": "notify@pdhiddm.io",
+      "rcpt_to": [
+        "notification@kerryreturned.tw"
+      ],
+      "auth": null,
+      "message_raw": "Content-Type: multipart/mixed; boundary=\"===============4364598010439687738==\"\nMIME-Version: 1.0\nFrom: notify@pdhiddm.io\nTo: notification@kerryreturned.tw\nSubject: [SMTP LIVE] 92.4.163.49:25\n\n--===============4364598010439687738==\nContent-Type: text/plain; charset=\"utf-8\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: base64\n\nU01UUCBTdGF0dXMgTm90aWZpY2F0aW9uCuKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU\ngOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU\ngOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgApTZXJ2ZXIgIDogOTIuNC4xNjMuNDk6MjUK\nRG9tYWluICA6IHBkaGlkZG0uaW8KU3RhdHVzICA6IExJVkUKQ2hlY2tlZCA6IDIwMjYtMTEtMTUg\nMDY6NDI6NTYK\n\n--===============4364598010439687738==--"
+    }
+  ]
+}
