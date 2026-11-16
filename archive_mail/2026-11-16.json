@@ -1,0 +1,27 @@
+{
+  "total_messages": 2,
+  "messages": [
+    {
+      "timestamp": "2026-11-16T05:18:11.095147+00:00",
+      "src_ip": "45.148.10.5",
+      "helo": "audit.local",
+      "mail_from": "john.smith@post.lu",
+      "rcpt_to": [
+        "frubeppoujeuni-2923@yopmail.com"
+      ],
+      "auth": null,
+      "message_raw": "From: <john.smith@post.lu>\nTo: <frubeppoujeuni-2923@yopmail.com>\nSubject: Direct SMTP Test - 92.4.163.49 (NoAuth External)\nContent-Type: text/plain; charset=UTF-8\n\n=== DIRECT SMTP TEST DELIVERY ===\nTarget IP       : 92.4.163.49\nTarget Port     : 25\nBanner          : mx.example ESMTP ready\nDetected Domain : mx.example\nTLS Active      : false\nAuth Used       : \nMAIL FROM Used  : john.smith@post.lu\nRCPT TO Target  : frubeppoujeuni-2923@yopmail.com\nTimestamp       : Mon, 16 Nov 2026 05:18:11 +0000\n=================================\n"
+    },
+    {
+      "timestamp": "2026-11-16T22:50:45.118256+00:00",
+      "src_ip": "31.57.37.53",
+      "helo": "vm-m-ulom22",
+      "mail_from": "spameri@tiscali.it",
+      "rcpt_to": [
+        "spameri@tiscali.it"
+      ],
+      "auth": null,
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Mon, 16 Nov 2026 22:50:50 +0000\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    }
+  ]
+}
