@@ -1,16 +1,4 @@
 {
-  "total_messages": 1,
-  "messages": [
-    {
-      "timestamp": "2026-11-20T06:39:52.191004+00:00",
-      "src_ip": "37.120.144.165",
-      "helo": "mail.example.com",
-      "mail_from": "noreply@wanadoo.fr",
-      "rcpt_to": [
-        "alepete2026@gmail.com"
-      ],
-      "auth": null,
-      "message_raw": "From: System Report <noreply@wanadoo.fr>\nTo: <alepete2026@gmail.com>\nSubject: SmptSever DMC\nDate: Fri, 20 Nov 2026 06:39:51 +0000\nMessage-ID: <1795156791888375@92.4.163.49>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\n\nSMTP validation complete.\nSource IP: 92.4.163.49:25\nSender: noreply@wanadoo.fr\nTarget: alepete2026@gmail.com\nTimestamp: 2026-11-20 06:39:51 UTC"
-    }
-  ]
+  "total_messages": 0,
+  "messages": []
 }
