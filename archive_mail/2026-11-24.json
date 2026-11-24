@@ -1,0 +1,41 @@
+{
+  "total_messages": 3,
+  "messages": [
+    {
+      "timestamp": "2026-11-24T05:37:33.439988+00:00",
+      "src_ip": "141.98.9.129",
+      "helo": "WIN-CLJ1B0GQ6JP",
+      "mail_from": "spameri@tiscali.it",
+      "rcpt_to": [
+        "spameri@tiscali.it"
+      ],
+      "auth": null,
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Mon, 23 Nov 2026 21:37:32 -0800\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    },
+    {
+      "timestamp": "2026-11-24T13:11:56.888982+00:00",
+      "src_ip": "102.220.160.68",
+      "helo": "vm-m-sb2lyqu4",
+      "mail_from": "spameri@tiscali.it",
+      "rcpt_to": [
+        "spameri@tiscali.it"
+      ],
+      "auth": null,
+      "message_raw": "From: spameri@tiscali.it\nSubject: 92.4.163.49\nTo: spameri@tiscali.it\nDate: Tue, 24 Nov 2026 13:12:03 +0000\nX-Priority: 3\nX-Library: Indy 8.0.25\n\nt_Smtp.LocalIP"
+    },
+    {
+      "timestamp": "2026-11-24T18:28:58.792218+00:00",
+      "src_ip": "41.175.19.6",
+      "helo": "User",
+      "mail_from": "mr.frankwilliams60@gmail.com",
+      "rcpt_to": [
+        "chuksnweke@yahoo.co.uk",
+        "jamesedward91@hotmail.com",
+        "mr.williamsfrank2@yandex.com",
+        "pauyglaou@gmail.com"
+      ],
+      "auth": null,
+      "message_raw": "Reply-To: <mr.williamsfrank2@yandex.com>\nFrom: \"Frank\"<mr.frankwilliams60@gmail.com>\nSubject: COMPENSATING YOU FOR PAST EFFORT92.4.163.49 NOV 24\nDate: Tue, 24 Nov 2026 10:28:57 -0800\nMIME-Version: 1.0\nContent-Type: text/plain;\n\tcharset=\"Windows-1251\"\nContent-Transfer-Encoding: 7bit\nX-Priority: 3\nX-MSMail-Priority: Normal\nX-Mailer: Microsoft Outlook Express 6.00.2600.0000\nX-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000\n\nHello Dear\n\nIt is my pleasure to reach you after our unsuccessful attempt on our business\ntransaction. Well, I just want to use this medium of time to thank you very much\nfor your earlier assistance to help me in receiving the funds.I am obliged to\ninform you that I have succeeded in receiving the funds with the help of a new\npartner from Taiwan, Dr. Mathew Hui. And everything was perfectly done because\nwe strike a deal with one of the Lady Accountant who works with the\nFederalMinistry of Finance (FMF), and she rendered a tremendous help to us. My\nnew partner initiated this idea and everything worked out successfully.\nIn appreciation of your earlier assistance to me in receiving the funds, I have\ndecided to compensate you with the sum of total amount of  Nine Hundred & Fifty Thousand United States Dollars\nUSD(950,000.00 usd) in a Cashier's cheque and my secretary will release\nit to you upon your contact with him. This is from my own share.I did this\nsimply to show appreciation to you for your kind support and assistance even\nthough we couldn't complete it together due to some unforseen circumstances.\n\nPresently, I am in Taiwan for investment with my own share under the advice of\nmy partner.\n\nRe-confirm bellow information's to him to avoid any mistake:\n\n1. Your full Name:\n\n2. Your Postal address:\n\n3. Direct Contact Telephone Number:\n\n4. Occupation.\n\nIn the light of the above, you are therefore advise to contact my personal secretary Mr Godwin Smith on his direct email address: pauyglaou@gmail.com\nand do send him your contact address where you want him to send your compensation fund.\n\nSo feel free to get in touch with him  my personal secretary Mr Godwin Smith on his direct email address: pauyglaou@gmail.com to send the compensation funds to you without any delay.\n\nWith my best regards,\n\nMr.Frank.\n"
+    }
+  ]
+}
